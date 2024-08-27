@@ -33,15 +33,15 @@ export class State {
   }
 
   setup(): void {
-    const ranks = range(0,25)
-    const shuffleable = ranks.filter(i => i !== 5 && i !== 1)
-    const shuffled = shuffle(shuffleable)
     const startPlayer = this.players.get(this.input.startingPlayerId)
     if(startPlayer == null) {
       throw new Error(`Invalid startingPlayerId ${this.input.startingPlayerId}`)
     }
     const startMessage = `${startPlayer.name} started the game`
-    const startEpisode = this.addEpisode(this.history, startMessage)
+    this.addEpisode(this.history, startMessage)
+    const ranks = range(0,25)
+    const shuffleable = ranks.filter(i => i !== 5 && i !== 1)
+    const shuffled = shuffle(shuffleable)
   }
 
   addEpisode(siblings: Episode[], message: string, playerId?: string): Episode {
