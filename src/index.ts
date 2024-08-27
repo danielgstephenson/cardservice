@@ -1,24 +1,8 @@
-type Setup = {
-  x: number
-}
+import * as External from './external'
+import * as Internal from './internal'
 
-type Episode = {
-  x: number
-}
-
-type Input = {
-  step: Setup
-  episodes: Episode[]
-}
-
-type Output = {
-  x: number
-}
-
-type Service = (input: Input) => Output
-
-const service: Service = (input) => {
+const service: External.Service = (input) => {
   return {x: 0}
 }
 
-console.log('test')
+console.log('index')
