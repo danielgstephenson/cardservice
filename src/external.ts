@@ -1,8 +1,29 @@
 export type Input = {
   gameId: string
+  seed: string
   startingPlayerId: string
+  cardDetails: CardDetails
+  playerCount: 2 | 3 | 4
   players: InputPlayer[]
   events: Event[]
+  names: {
+    card: string
+    cards: string
+    market: string
+    added: string
+    archive: string
+    archived: string
+    lowestRank: string
+  }
+}
+
+export type CardDetails = {
+  ids: number[]
+  colors: string[]
+  charges: number[]
+  firstPowers: string[]
+  secondPowers: string[]
+  bonusPowers: string[]
 }
 
 export type InputPlayer = {
@@ -80,6 +101,7 @@ export type Episode = {
 }
 
 export type CardColor = 'green' | 'yellow' | 'red'
+
 export type Card = {
   id: string
   rank: number
@@ -130,6 +152,7 @@ export type Profile = {
 }
 
 export type PendingChoiceType = 'trash' | 'recover' | 'recovermutiple'
+
 export type PendingChoice = {
   id: string
   playerId: string
@@ -137,6 +160,8 @@ export type PendingChoice = {
   card: Card
   copyingCard: Card | null
 }
+
+export type Color = 'green' | 'red' | 'yellow'
 
 export type Game = {
   startTime: number

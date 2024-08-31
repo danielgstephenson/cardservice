@@ -32,4 +32,14 @@ export class Episode {
     this.state.lastMessageRound = this.round
     this.playerId = def.playerId
   }
+
+  addChild(message: string, playerId?: string) {
+    const episodeDef = {
+      state: this.state,
+      siblings: this.children,
+      message,
+      playerId
+    }
+    return new Episode(episodeDef)
+  }
 }
