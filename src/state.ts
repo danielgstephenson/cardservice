@@ -1,10 +1,8 @@
 import Rand from 'rand-seed'
 import * as External from './external'
-import { Phase, Input, Color} from './external'
+import { Phase, Input } from './external'
 import { Player } from './player'
-import { range, shuffle } from './math'
 import { Episode } from './episode'
-import { arrayToString, cardsToString, numberToString } from './translate'
 import { Card } from './card'
 import { History } from './history'
 import { setup } from './setup'
@@ -15,7 +13,7 @@ export class State {
   market: Card[] = []
   archive: Card[] = []
   center: Card[] = []
-  players = new Map<string,Player>()
+  players = new Map<string, Player>()
   history: History
   round = 1
   lastMessageRound = 0
@@ -23,12 +21,12 @@ export class State {
   extraMarket = false
   playTied = false
   input: Input
-  startEpisode?: Episode
+  startingEpisode?: Episode
   startingHand: Card[] = []
   startingReserve: Card[] = []
   startingArchive: Card[] = []
 
-  constructor(input: External.Input) {
+  constructor (input: External.Input) {
     this.input = input
     this.startTime = Date.now()
     input.players.forEach(inputPlayer => {
@@ -39,5 +37,4 @@ export class State {
     this.history = new History(this)
     setup(this)
   }
-
 }

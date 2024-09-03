@@ -1,18 +1,16 @@
-
-import * as External from './external'
 import { State } from './state'
 
 export class Card {
   state: State
-  id:  string
+  id: string
   rank: number
   charge: number
   color: string
   firstPower: string
   secondPower: string
-  bonusPower: string 
+  bonusPower: string
 
-  constructor(rank: number, state: State) {
+  constructor (rank: number, state: State) {
     this.state = state
     this.rank = rank
     this.id = String(Math.random())
@@ -23,20 +21,19 @@ export class Card {
     this.bonusPower = this.state.input.cardDetails.bonusPowers[this.rank]
   }
 
-  static sortByRank(cards: Card[]): Card[] {
+  static sortByRank (cards: Card[]): Card[] {
     const sorted = [...cards]
     sorted.sort((a, b) => a.rank - b.rank)
     return sorted
   }
 
-  static sortByRankDescend(cards: Card[]): Card[] {
+  static sortByRankDescend (cards: Card[]): Card[] {
     const sorted = [...cards]
     sorted.sort((a, b) => b.rank - a.rank)
     return sorted
   }
 
-  static cloneCards(cards: Card[]): Card[] {
-    return cards.map(card => new Card(card.rank,card.state))
+  static cloneCards (cards: Card[]): Card[] {
+    return cards.map(card => new Card(card.rank, card.state))
   }
-
 }

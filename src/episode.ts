@@ -1,8 +1,6 @@
-import * as External from './external'
 import { } from './external'
 import { State } from './state'
 import { Player } from './player'
-
 
 export interface EpisodeDef {
   state: State
@@ -26,7 +24,7 @@ export class Episode {
   private: boolean
   viewers: Player[]
 
-  constructor(def: EpisodeDef) {
+  constructor (def: EpisodeDef) {
     this.id = String(def.state.rand.next())
     this.state = def.state
     this.private = def.private ?? false
@@ -41,7 +39,7 @@ export class Episode {
     this.playerId = def.playerId
   }
 
-  addPublicChild(message: string, playerId?: string) {
+  addPublicChild (message: string, playerId?: string): Episode {
     const episodeDef = {
       state: this.state,
       siblings: this.children,
@@ -52,7 +50,7 @@ export class Episode {
     return new Episode(episodeDef)
   }
 
-  addPrivateChild(message: string, viewers: Player[], playerId?: string) {
+  addPrivateChild (message: string, viewers: Player[], playerId?: string): Episode {
     const episodeDef = {
       state: this.state,
       siblings: this.children,
