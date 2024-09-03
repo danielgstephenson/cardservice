@@ -14,6 +14,8 @@ export type Input = {
     archive: string
     archived: string
     lowestRank: string
+    reserve: string
+    center: string
   }
 }
 

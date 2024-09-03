@@ -1,12 +1,16 @@
 import * as External from './external'
 import { } from './external'
 import { State } from './state'
+import { Player } from './player'
+
 
 export interface EpisodeDef {
   state: State
   siblings: Episode[]
   message: string
   playerId?: string
+  private?: boolean
+  viewers?: Player[]
 }
 
 export class Episode {
@@ -19,10 +23,14 @@ export class Episode {
   round: number
   firstInRound: boolean
   playerId: string | undefined
+  private: boolean
+  viewers: Player[]
 
   constructor(def: EpisodeDef) {
     this.id = String(def.state.rand.next())
     this.state = def.state
+    this.private = def.private ?? false
+    this.viewers = def.viewers ?? []
     this.time = Date.now()
     this.siblings = def.siblings
     this.siblings.push(this)
@@ -33,10 +41,23 @@ export class Episode {
     this.playerId = def.playerId
   }
 
-  addChild(message: string, playerId?: string) {
+  addPublicChild(message: string, playerId?: string) {
     const episodeDef = {
       state: this.state,
       siblings: this.children,
+      private: false,
+      message,
+      playerId
+    }
+    return new Episode(episodeDef)
+  }
+
+  addPrivateChild(message: string, viewers: Player[], playerId?: string) {
+    const episodeDef = {
+      state: this.state,
+      siblings: this.children,
+      private: true,
+      viewers,
       message,
       playerId
     }

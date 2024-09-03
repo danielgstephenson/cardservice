@@ -1,6 +1,8 @@
 import Rand from 'rand-seed'
 import * as External from './external'
-import { Card, TrashCard, Input, InputPlayer, Episode } from './external'
+import { TrashCard, Input, InputPlayer, Episode } from './external'
+import { State } from './state'
+import { Card } from './card'
 
 export class Player {
   id: string
@@ -11,8 +13,7 @@ export class Player {
   reserve: Card[] = []
   inPlay: Card[] = []
   trash: TrashCard[] = []
-  history: Episode[] = []
-  majorMoney = 0
+  majorMoney: number
   minorMoney = 0
   playReady = false
   withdrawn = false
@@ -21,10 +22,13 @@ export class Player {
   trashCard: Card | null = null
   bid = 0
 
-  constructor(input: Input, inputPlayer: InputPlayer) {
+  constructor(state: State, inputPlayer: InputPlayer) {
     this.id = inputPlayer.id
     this.userId = inputPlayer.userId
     this.name = inputPlayer.name
-    this.gameId = input.gameId
+    this.gameId = state.input.gameId
+    this.hand = Card.cloneCards(state.startingHand)
+    this.reserve = Card.cloneCards(state.startingReserve)
+    this.majorMoney = 70 - 10 * state.input.playerCount
   }
 }
