@@ -1,4 +1,4 @@
-export type Input = {
+export interface Input {
   gameId: string
   seed: string
   startingPlayerId: string
@@ -19,7 +19,7 @@ export type Input = {
   }
 }
 
-export type CardDetails = {
+export interface CardDetails {
   ids: number[]
   colors: string[]
   charges: number[]
@@ -28,19 +28,19 @@ export type CardDetails = {
   bonusPowers: string[]
 }
 
-export type InputPlayer = {
+export interface InputPlayer {
   id: string
   userId: string
   name: string
 }
 
-export type EventType = 
-  'play' | 
-  'bid' | 
-  'withdraw' | 
-  'archive' | 
-  'concede' | 
-  'pendingChoice' | 
+export type EventType =
+  'play' |
+  'bid' |
+  'withdraw' |
+  'archive' |
+  'concede' |
+  'pendingChoice' |
   'take'
 
 export type Phase = 'play' | 'auction'
@@ -92,7 +92,7 @@ export interface TakeEvent extends Event {
   cardIds: string[]
 }
 
-export type Episode = {
+export interface Episode {
   message: string
   children: Episode[]
   time: number
@@ -104,17 +104,17 @@ export type Episode = {
 
 export type CardColor = 'green' | 'yellow' | 'red'
 
-export type Card = {
+export interface Card {
   id: string
   rank: number
 }
 
-export type TrashCard = {
+export interface TrashCard {
   card: Card | null
   round: number
 }
 
-export type Player = {
+export interface Player {
   id: string
   userId: string
   name: string
@@ -134,7 +134,7 @@ export type Player = {
   minorMoney: number
 }
 
-export type Profile = {
+export interface Profile {
   id: string
   userId: string
   name: string
@@ -155,7 +155,7 @@ export type Profile = {
 
 export type PendingChoiceType = 'trash' | 'recover' | 'recovermutiple'
 
-export type PendingChoice = {
+export interface PendingChoice {
   id: string
   playerId: string
   type: PendingChoiceType
@@ -165,7 +165,7 @@ export type PendingChoice = {
 
 export type Color = 'green' | 'red' | 'yellow'
 
-export type Game = {
+export interface Game {
   startTime: number
   history: Episode[]
   profiles: Profile[]
@@ -179,7 +179,7 @@ export type Game = {
   playTied: boolean
 }
 
-export type Output = {
+export interface Output {
   players: Player[]
   game: Game
 }

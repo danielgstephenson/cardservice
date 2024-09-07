@@ -1,15 +1,13 @@
-import { Episode, EpisodeDef } from "./episode";
-import { State } from "./state";
+import { Episode, EpisodeDef } from './episode'
+import { State } from './state'
 
 export class History extends Episode {
-
-  constructor(state: State) {
+  constructor (state: State) {
     const def: EpisodeDef = {
       state,
       siblings: [],
-      message: 'HISTORY',
+      message: 'HISTORY'
     }
     super(def)
   }
-
-} 
+}
