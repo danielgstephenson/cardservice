@@ -10,6 +10,7 @@ export function setup (state: State): void {
   if (state.startingEpisode == null) throw new Error('startEpisode is null')
   if (cardsInGame.length === 0) throw new Error('cardsInGame.length === 0')
   const marketCard = cardsInGame[0]
+  state.startingMarket = [marketCard]
   let marketRankMessage = `The lowest rank ${state.input.names.card}, ${marketCard?.rank}, `
   marketRankMessage += `${state.input.names.added} to the ${state.input.names.market}.`
   state.startingEpisode.addPublicChild(marketRankMessage)
@@ -22,15 +23,16 @@ export function setup (state: State): void {
   const reserveString = cardsToString(state.startingReserve)
   const reserveMessage = `The ${state.input.names.reserve} is: ${reserveString}.`
   state.startingEpisode.addPublicChild(reserveMessage)
-  if (state.archive.length === 0) throw new Error('archive is empty')
-  state.center = cardsInGame.filter(card => !portfolio.includes(card) && card !== state.archive[0])
-  const centerString = cardsToString(state.center)
+  if (state.startingArchive.length === 0) throw new Error('startingArchive is empty')
+  state.startingCenter = cardsInGame.filter(card => !portfolio.includes(card) && card !== state.startingArchive[0])
+  const centerString = cardsToString(state.startingCenter)
   const centerMessage = `The ${state.input.names.center} is: ${centerString}.`
   state.startingEpisode.addPublicChild(centerMessage)
   state.input.players.forEach(inputPlayer => {
     state.players.set(inputPlayer.id, new Player(state, inputPlayer))
   })
   state.history.addPublicChild('Round 1 begins.')
+  // Which cards start in the market?
 }
 
 function getCardsInGame (state: State): Card[] {

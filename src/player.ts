@@ -1,6 +1,4 @@
-import Rand from 'rand-seed'
-import * as External from './external'
-import { TrashCard, Input, InputPlayer, Episode } from './external'
+import { TrashCard, InputPlayer } from './external'
 import { State } from './state'
 import { Card } from './card'
 
@@ -22,7 +20,7 @@ export class Player {
   trashCard: Card | null = null
   bid = 0
 
-  constructor(state: State, inputPlayer: InputPlayer) {
+  constructor (state: State, inputPlayer: InputPlayer) {
     this.id = inputPlayer.id
     this.userId = inputPlayer.userId
     this.name = inputPlayer.name
@@ -30,5 +28,6 @@ export class Player {
     this.hand = Card.cloneCards(state.startingHand)
     this.reserve = Card.cloneCards(state.startingReserve)
     this.majorMoney = 70 - 10 * state.input.playerCount
+    state.players.set(this.id, this)
   }
 }
