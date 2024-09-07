@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc -build ./src",
-    "start": "node ./dist",
+    "start": "node ./dist/client",
     "dev": "npm run build && npm run start"
   },
   "author": "",

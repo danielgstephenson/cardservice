@@ -1,16 +1,18 @@
-import { TrashCard, InputPlayer } from './external'
+import { InputPlayer } from './external'
 import { State } from './state'
 import { Card } from './card'
+import { CardGroup } from './cardGroup'
 
 export class Player {
   id: string
   userId: string
   gameId: string
+  state: State
   name: string
-  hand: Card[] = []
-  reserve: Card[] = []
-  inPlay: Card[] = []
-  trash: TrashCard[] = []
+  hand: CardGroup
+  reserve: CardGroup
+  inPlay = new CardGroup()
+  trash = new CardGroup()
   majorMoney: number
   minorMoney = 0
   playReady = false
@@ -25,8 +27,9 @@ export class Player {
     this.userId = inputPlayer.userId
     this.name = inputPlayer.name
     this.gameId = state.input.gameId
-    this.hand = Card.cloneCards(state.startingHand)
-    this.reserve = Card.cloneCards(state.startingReserve)
+    this.state = state
+    this.hand = new CardGroup(state.startingHand)
+    this.reserve = new CardGroup(state.startingReserve)
     this.majorMoney = 70 - 10 * state.input.playerCount
     state.players.set(this.id, this)
   }

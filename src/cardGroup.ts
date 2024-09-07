@@ -4,7 +4,7 @@ export class CardGroup {
   array: Card[]
 
   constructor (array?: Card[]) {
-    this.array = array != null ? [...array] : []
+    this.array = array != null ? Card.cloneCards(array) : []
   }
 
   add (card: Card): void {

@@ -1,3 +1,4 @@
+import { Color } from './external'
 import { State } from './state'
 
 export class Card {
@@ -5,10 +6,11 @@ export class Card {
   id: string
   rank: number
   charge: number
-  color: string
+  color: Color
   firstPower: string
   secondPower: string
   bonusPower: string
+  trashRound?: number
 
   constructor (rank: number, state: State) {
     this.state = state

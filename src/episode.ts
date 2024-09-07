@@ -20,7 +20,7 @@ export class Episode {
   id: string
   round: number
   firstInRound: boolean
-  playerId: string | undefined
+  playerId?: string
   private: boolean
   viewers: Player[]
 

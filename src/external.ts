@@ -3,16 +3,18 @@ export interface Input {
   seed: string
   startingPlayerId: string
   cardDetails: CardDetails
-  playerCount: 2 | 3 | 4
+  playerCount: 2 | 3 | 4 | 5
   players: InputPlayer[]
   events: Event[]
   names: {
     card: string
+    Card: string
     cards: string
+    Cards: string
     market: string
-    added: string
+    isAddedToMarket: string
     archive: string
-    archived: string
+    archivedTo: string
     lowestRank: string
     reserve: string
     center: string
@@ -20,8 +22,8 @@ export interface Input {
 }
 
 export interface CardDetails {
-  ids: number[]
-  colors: string[]
+  ranks: number[]
+  colors: Color[]
   charges: number[]
   firstPowers: string[]
   secondPowers: string[]
@@ -99,18 +101,21 @@ export interface Episode {
   id: string
   round: number
   firstInRound: boolean
-  playerId: string | null
+  playerId?: string
 }
-
-export type CardColor = 'green' | 'yellow' | 'red'
 
 export interface Card {
   id: string
   rank: number
 }
 
-export interface TrashCard {
-  card: Card | null
+export interface PrivateTrashCard {
+  id: string
+  rank: number
+  round: number
+}
+
+export interface PublicTrashCard {
   round: number
 }
 
@@ -129,7 +134,7 @@ export interface Player {
   hand: Card[]
   reserve: Card[]
   inPlay: Card[]
-  trash: TrashCard[]
+  trash: PrivateTrashCard[]
   majorMoney: number
   minorMoney: number
 }
@@ -148,7 +153,7 @@ export interface Profile {
   handPossible: Card[]
   reserve: Card[]
   inPlay: Card[]
-  trash: TrashCard[]
+  trash: PublicTrashCard[]
   majorMoney: number
   minorMoney: number
 }
@@ -163,7 +168,7 @@ export interface PendingChoice {
   copyingCard: Card | null
 }
 
-export type Color = 'green' | 'red' | 'yellow'
+export type Color = 'Green' | 'Red' | 'Yellow'
 
 export interface Game {
   startTime: number
