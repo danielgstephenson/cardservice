@@ -1,3 +1,4 @@
+import { CardGroup } from './cardGroup'
 import { Color } from './external'
 import { State } from './state'
 
@@ -11,6 +12,7 @@ export class Card {
   secondPower: string
   bonusPower: string
   trashRound?: number
+  cardGroup?: CardGroup
 
   constructor (rank: number, state: State) {
     this.state = state
