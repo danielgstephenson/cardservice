@@ -12,7 +12,7 @@ export class Card {
   secondPower: string
   bonusPower: string
   trashRound?: number
-  cardGroup?: CardGroup
+  group?: CardGroup
 
   constructor (rank: number, state: State) {
     this.state = state

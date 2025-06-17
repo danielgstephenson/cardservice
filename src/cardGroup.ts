@@ -9,20 +9,20 @@ export class CardGroup {
   }
 
   add (card: Card): void {
-    if (card.cardGroup != null) {
-      let message = `CardGroup.add: Cannot add Card ${card.id} to CardGroup ${this.label}.`
-      message += `Card ${card.id} is already in group ${card.cardGroup.label}`
+    if (card.group != null) {
+      let message = `CardGroup.add: cannot add card ${card.id} to group ${this.label}.`
+      message += `Card ${card.id} is already in group ${card.group.label}`
       throw new Error(message)
     }
     this.array.push(card)
-    card.cardGroup = this
+    card.group = this
   }
 
   remove (card: Card): void {
     const contains = this.array.includes(card)
-    if (!contains) throw new Error('CardGroup.remove: this card is not in the group')
+    if (!contains) throw new Error(`CardGroup.remove: card ${card.id} is not in group ${this.label}`)
     this.array = this.array.filter(c => c !== card)
-    card.cardGroup = undefined
+    card.group = undefined
   }
 
   size (): number {

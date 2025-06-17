@@ -37,7 +37,10 @@ export class State {
     this.history = new History(this)
     setup(this)
     this.archive = new CardGroup(this.startingArchive)
+    this.archive.label = 'archive'
     this.center = new CardGroup(this.startingArchive)
+    this.center.label = 'center'
     this.market = new CardGroup(this.startingMarket)
+    this.market.label = 'market'
   }
 }

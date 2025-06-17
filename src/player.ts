@@ -29,7 +29,9 @@ export class Player {
     this.gameId = state.input.gameId
     this.state = state
     this.hand = new CardGroup(state.startingHand)
+    this.hand.label = `hand of player ${this.id}`
     this.reserve = new CardGroup(state.startingReserve)
+    this.hand.label = `reserve of player ${this.id}`
     this.majorMoney = 70 - 10 * state.input.playerCount
     state.players.set(this.id, this)
   }
