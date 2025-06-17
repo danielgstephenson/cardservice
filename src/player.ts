@@ -35,4 +35,24 @@ export class Player {
     this.majorMoney = 70 - 10 * state.input.playerCount
     state.players.set(this.id, this)
   }
+
+  earn (amount: number): void {
+    if (amount < 0) {
+      throw new Error('player.earn: amount must non-negative')
+    }
+    const minorAmount = amount % 5
+    const majorAmount = amount - minorAmount
+    this.minorMoney += minorAmount
+    this.majorMoney += majorAmount
+  }
+
+  pay (amount: number): void {
+    if (amount < 0) {
+      throw new Error('player.pay: amount must non-negative')
+    }
+    const minorAmount = Math.min(this.minorMoney, amount)
+    const majorAmount = Math.min(amount - minorAmount, this.majorMoney)
+    this.minorMoney -= minorAmount
+    this.majorMoney -= majorAmount
+  }
 }
