@@ -22,6 +22,7 @@ export class CardGroup {
     const contains = this.array.includes(card)
     if (!contains) throw new Error('CardGroup.remove: this card is not in the group')
     this.array = this.array.filter(c => c !== card)
+    card.cardGroup = undefined
   }
 
   size (): number {
