@@ -1,7 +1,7 @@
 import { service } from '.'
 import { Input } from './external'
 
-const input: Input = {
+const input1: Input = {
   gameId: 'g1',
   seed: 's2',
   startingPlayerId: 'p1',
@@ -199,9 +199,23 @@ const input: Input = {
   }
 }
 
-const output = service(input)
+const output1 = service(input1)
+const output1p1 = output1.players.find(player => player.id === 'p1')
+if (output1p1 == null) {
+  throw new Error('p1 not found in output1')
+}
 
-output.game.history.forEach(episode => {
+const input2 = structuredClone(input1)
+input2.events.push({
+  type: 'play',
+  phase: 'play',
+  playCard: output1p1.hand[0],
+  trashCard: output1p1.hand[1],
+  time: 1,
+  userId: 'p1'
+})
+
+output1.game.history.forEach(episode => {
   console.log(episode.message)
   episode.children.forEach(child => {
     console.log(child.message)

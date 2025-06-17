@@ -5,7 +5,7 @@ export interface Input {
   cardDetails: CardDetails
   playerCount: 2 | 3 | 4 | 5
   players: InputPlayer[]
-  events: Event[]
+  events: InputEvent[]
   names: {
     card: string
     Card: string
@@ -93,6 +93,8 @@ export interface TakeEvent extends Event {
   phase: 'auction'
   cardIds: string[]
 }
+
+export type InputEvent = PlayEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ArchiveEvent | ConcedeEvent | TakeEvent
 
 export interface Episode {
   message: string
