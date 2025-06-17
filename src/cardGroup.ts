@@ -10,9 +10,7 @@ export class CardGroup {
 
   add (card: Card): void {
     if (card.group != null) {
-      let message = `CardGroup.add: cannot add card ${card.id} to group ${this.label}.`
-      message += `Card ${card.id} is already in group ${card.group.label}`
-      throw new Error(message)
+      card.group.remove(card)
     }
     this.array.push(card)
     card.group = this
