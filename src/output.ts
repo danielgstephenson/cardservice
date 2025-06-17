@@ -6,7 +6,7 @@ import { Player } from './player'
 import { State } from './state'
 
 export function getOutput (state: State): Output {
-  const players = [...state.players.values()]
+  const players = [...Object.values(state.players)]
   return {
     players: players.map(player => getOutputPlayer(player)),
     game: getOutputGame(state)
@@ -86,7 +86,7 @@ function getOutputGame (state: State): Game {
   const publicEpisodes = state.history.children.filter(episode => {
     return !episode.private
   })
-  const players = [...state.players.values()]
+  const players = [...Object.values(state.players)]
   return {
     startTime: state.startTime,
     history: publicEpisodes.map(episode => getOutputEpisode(episode)),

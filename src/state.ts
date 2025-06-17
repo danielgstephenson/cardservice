@@ -14,7 +14,7 @@ export class State {
   market = new CardGroup()
   archive = new CardGroup()
   center = new CardGroup()
-  players = new Map<string, Player>()
+  players: Record<string, Player> = {}
   history: History
   round = 1
   lastMessageRound = 0
@@ -42,5 +42,19 @@ export class State {
     this.center.label = 'center'
     this.market = new CardGroup(this.startingMarket)
     this.market.label = 'market'
+    console.log('events', input.events)
+    this.input.events.forEach(event => this.handleEvent(event))
+  }
+
+  handleEvent (event: External.InputEvent): void {
+    if (event.type === 'play') {
+      this.handlePlayEvent(event)
+    }
+  }
+
+  handlePlayEvent (event: External.PlayEvent): void {
+    if (event.phase !== this.phase) {
+      throw new Error(`handlePlayEvent: this.phase === ${this.phase}`)
+    }
   }
 }

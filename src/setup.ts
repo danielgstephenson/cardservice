@@ -30,13 +30,13 @@ export function setup (state: State): void {
   const centerMessage = `The ${state.input.names.center} is: ${centerString}.`
   state.startingEpisode.addPublicChild(centerMessage)
   state.input.players.forEach(inputPlayer => {
-    state.players.set(inputPlayer.id, new Player(state, inputPlayer))
+    state.players[inputPlayer.id] = new Player(state, inputPlayer)
   })
   state.history.addPublicChild('Round 1 begins.')
 }
 
 function getCardsInGame (state: State): Card[] {
-  const startPlayer = state.players.get(state.input.startingPlayerId)
+  const startPlayer = state.players[state.input.startingPlayerId]
   if (startPlayer == null) {
     throw new Error(`Invalid startingPlayerId ${state.input.startingPlayerId}`)
   }

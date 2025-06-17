@@ -215,7 +215,9 @@ input2.events.push({
   userId: 'p1'
 })
 
-output1.game.history.forEach(episode => {
+const output2 = service(input2)
+
+output2.game.history.forEach(episode => {
   console.log(episode.message)
   episode.children.forEach(child => {
     console.log(child.message)

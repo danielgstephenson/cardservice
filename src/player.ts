@@ -33,7 +33,7 @@ export class Player {
     this.reserve = new CardGroup(state.startingReserve)
     this.hand.label = `reserve of player ${this.id}`
     this.majorMoney = 70 - 10 * state.input.playerCount
-    state.players.set(this.id, this)
+    state.players[this.id] = this
   }
 
   earn (amount: number): void {
