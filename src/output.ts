@@ -15,7 +15,7 @@ export function getOutput (state: State): Output {
 
 function getOutputPlayer (player: Player): External.Player {
   const playerEpisodes = player.state.history.children.filter(episode => {
-    return episode.viewers.includes(player)
+    return episode.viewers.some(id => id === player.id)
   })
   return {
     id: player.id,
@@ -26,12 +26,10 @@ function getOutputPlayer (player: Player): External.Player {
     playReady: player.playReady,
     withdrawn: player.withdrawn,
     auctionReady: player.auctionReady,
-    playCard: player.playCard,
-    trashCard: player.trashCard,
     bid: player.bid,
     hand: player.hand.array.map(card => getOutputCard(card)),
-    reserve: player.reserve.array.map(card => getOutputCard(card)),
-    inPlay: player.inPlay.array.map(card => getOutputCard(card)),
+    deck: player.deck.array.map(card => getOutputCard(card)),
+    play: player.play.array.map(card => getOutputCard(card)),
     trash: player.trash.array.map(card => getPrivateTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney
@@ -47,12 +45,11 @@ function getOutputProfile (player: Player): External.Profile {
     playReady: player.playReady,
     withdrawn: player.withdrawn,
     auctionReady: player.auctionReady,
-    playCard: player.playCard,
     bid: player.bid,
     handCount: player.hand.size(),
     handPossible: [],
-    reserve: player.reserve.array.map(card => getOutputCard(card)),
-    inPlay: player.inPlay.array.map(card => getOutputCard(card)),
+    deck: player.deck.array.map(card => getOutputCard(card)),
+    play: player.play.array.map(card => getOutputCard(card)),
     trash: player.trash.array.map(card => getPublicTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney

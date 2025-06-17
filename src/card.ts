@@ -1,4 +1,4 @@
-import { CardGroup } from './cardGroup'
+import { CardGroup } from './cardGroup/cardGroup'
 import { Color } from './external'
 import { State } from './state'
 
@@ -17,12 +17,13 @@ export class Card {
   constructor (rank: number, state: State) {
     this.state = state
     this.rank = rank
-    this.id = String(Math.random())
+    this.id = String(this.state.rand.next())
     this.charge = this.state.input.cardDetails.charges[this.rank]
     this.color = this.state.input.cardDetails.colors[this.rank]
     this.firstPower = this.state.input.cardDetails.firstPowers[this.rank]
     this.secondPower = this.state.input.cardDetails.secondPowers[this.rank]
     this.bonusPower = this.state.input.cardDetails.bonusPowers[this.rank]
+    this.state.cards[this.id] = this
   }
 
   static sortByRank (cards: Card[]): Card[] {

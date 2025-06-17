@@ -1,4 +1,4 @@
-import { Card } from './card'
+import { Card } from '../card'
 
 export class CardGroup {
   label = ''
@@ -6,6 +6,7 @@ export class CardGroup {
 
   constructor (array?: Card[]) {
     this.array = array != null ? Card.cloneCards(array) : []
+    this.array.forEach(card => { card.group = this })
   }
 
   add (card: Card): void {

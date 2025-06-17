@@ -1,5 +1,5 @@
 import { service } from '.'
-import { Input } from './external'
+import { Input, Output, Player } from './external'
 
 const input1: Input = {
   gameId: 'g1',
@@ -194,35 +194,98 @@ const input1: Input = {
     archive: 'dungeon',
     archivedTo: 'imprisoned in',
     lowestRank: 'lowest rank',
-    reserve: 'deck',
-    center: 'timeline'
+    deck: 'deck',
+    center: 'timeline',
+    trash: 'exile'
   }
 }
 
-const output1 = service(input1)
-const output1p1 = output1.players.find(player => player.id === 'p1')
-if (output1p1 == null) {
-  throw new Error('p1 not found in output1')
+function getPlayer (output: Output, playerId: string): Player {
+  const player = output1.players.find(player => player.id === playerId)
+  if (player == null) {
+    throw new Error(`${playerId} not found in output1`)
+  }
+  return player
 }
 
+const output1 = service(input1)
+const output1p1 = getPlayer(output1, 'p1')
+const output1p2 = getPlayer(output1, 'p2')
+const output1p3 = getPlayer(output1, 'p3')
+const output1p4 = getPlayer(output1, 'p4')
+const output1p5 = getPlayer(output1, 'p5')
+
 const input2 = structuredClone(input1)
+console.log('input2.seed', input2.seed)
 input2.events.push({
-  type: 'play',
+  type: 'plan',
   phase: 'play',
   playCard: output1p1.hand[0],
   trashCard: output1p1.hand[1],
   time: 1,
   userId: 'p1'
 })
-
-const output2 = service(input2)
-
-output2.game.history.forEach(episode => {
-  console.log(episode.message)
-  episode.children.forEach(child => {
-    console.log(child.message)
-  })
+input2.events.push({
+  type: 'plan',
+  phase: 'play',
+  playCard: output1p2.hand[0],
+  trashCard: output1p2.hand[1],
+  time: 2,
+  userId: 'p2'
+})
+input2.events.push({
+  type: 'plan',
+  phase: 'play',
+  playCard: output1p3.hand[0],
+  trashCard: output1p3.hand[1],
+  time: 3,
+  userId: 'p3'
+})
+input2.events.push({
+  type: 'plan',
+  phase: 'play',
+  playCard: output1p4.hand[0],
+  trashCard: output1p4.hand[1],
+  time: 4,
+  userId: 'p4'
+})
+input2.events.push({
+  type: 'plan',
+  phase: 'play',
+  playCard: output1p5.hand[0],
+  trashCard: output1p5.hand[1],
+  time: 5,
+  userId: 'p5'
 })
 
-// const pretty = JSON.stringify(output, null, 2)
-// console.log(pretty)
+const output2 = service(input2)
+void output2
+const output2p1 = output2.players.find(player => player.id === 'p1')
+if (output2p1 == null) {
+  throw new Error('p1 not found in output2')
+}
+
+// output2.game.history.forEach(episode => {
+//   console.log(episode.message)
+//   episode.children.forEach(child => {
+//     console.log(child.message)
+//   })
+// })
+
+const details = {
+  // hand: output2p1.hand,
+  // play: output2p1.play,
+  // trash: output2p1.trash,
+  playerHistory: [
+    output2p1.history[2],
+    output2p1.history[3],
+    output2p1.history[4],
+    output2p1.history[5],
+    output2p1.history[6],
+    output2p1.history[7],
+    output2p1.history[8]
+  ]
+  // publicHistory: output2.game.history
+}
+const pretty = JSON.stringify(details, null, 2)
+console.log(pretty)

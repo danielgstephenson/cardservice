@@ -16,8 +16,9 @@ export interface Input {
     archive: string
     archivedTo: string
     lowestRank: string
-    reserve: string
+    deck: string
     center: string
+    trash: string
   }
 }
 
@@ -37,7 +38,7 @@ export interface InputPlayer {
 }
 
 export type EventType =
-  'play' |
+  'plan' |
   'bid' |
   'withdraw' |
   'archive' |
@@ -53,8 +54,8 @@ export interface Event {
   userId: string
 }
 
-export interface PlayEvent extends Event {
-  type: 'play'
+export interface PlanEvent extends Event {
+  type: 'plan'
   phase: 'play'
   playCard: Card
   trashCard: Card
@@ -94,7 +95,7 @@ export interface TakeEvent extends Event {
   cardIds: string[]
 }
 
-export type InputEvent = PlayEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ArchiveEvent | ConcedeEvent | TakeEvent
+export type InputEvent = PlanEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ArchiveEvent | ConcedeEvent | TakeEvent
 
 export interface Episode {
   message: string
@@ -130,12 +131,10 @@ export interface Player {
   playReady: boolean
   withdrawn: boolean
   auctionReady: boolean
-  playCard: Card | null
-  trashCard: Card | null
   bid: number
   hand: Card[]
-  reserve: Card[]
-  inPlay: Card[]
+  deck: Card[]
+  play: Card[]
   trash: PrivateTrashCard[]
   majorMoney: number
   minorMoney: number
@@ -149,12 +148,11 @@ export interface Profile {
   playReady: boolean
   withdrawn: boolean
   auctionReady: boolean
-  playCard: Card | null
   bid: number
   handCount: number
   handPossible: Card[]
-  reserve: Card[]
-  inPlay: Card[]
+  deck: Card[]
+  play: Card[]
   trash: PublicTrashCard[]
   majorMoney: number
   minorMoney: number

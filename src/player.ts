@@ -1,7 +1,7 @@
 import { InputPlayer } from './external'
 import { State } from './state'
-import { Card } from './card'
-import { CardGroup } from './cardGroup'
+import { CardGroup } from './cardGroup/cardGroup'
+import { Trash } from './cardGroup/trash'
 
 export class Player {
   id: string
@@ -10,16 +10,15 @@ export class Player {
   state: State
   name: string
   hand: CardGroup
-  reserve: CardGroup
-  inPlay = new CardGroup()
-  trash = new CardGroup()
+  deck: CardGroup
+  play = new CardGroup()
+  trash = new Trash()
+  discard = new CardGroup()
   majorMoney: number
   minorMoney = 0
   playReady = false
   withdrawn = false
   auctionReady = false
-  playCard: Card | null = null
-  trashCard: Card | null = null
   bid = 0
 
   constructor (state: State, inputPlayer: InputPlayer) {
@@ -30,8 +29,8 @@ export class Player {
     this.state = state
     this.hand = new CardGroup(state.startingHand)
     this.hand.label = `hand of player ${this.id}`
-    this.reserve = new CardGroup(state.startingReserve)
-    this.hand.label = `reserve of player ${this.id}`
+    this.deck = new CardGroup(state.startingDeck)
+    this.hand.label = `deck of player ${this.id}`
     this.majorMoney = 70 - 10 * state.input.playerCount
     state.players[this.id] = this
   }
