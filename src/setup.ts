@@ -49,7 +49,7 @@ function getCardsInGame (state: State): Card[] {
   const joinedRanks = arrayToString(shuffled)
   const shuffleMessage = `Shuffled ${state.input.names.cards} 2, 3, 4, 6, 7, and 9 through 25: ${joinedRanks}.`
   state.startingEpisode.addBroadcastChild(shuffleMessage)
-  const dealCount = 14 + state.input.playerCount
+  const dealCount = 13 + state.input.playerCount
   const dealCountMessage = `The deal count is fourteen plus the number of players, ${dealCount}.`
   state.startingEpisode.addBroadcastChild(dealCountMessage)
   const ranksInGame = shuffled.slice(0, dealCount)
