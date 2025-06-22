@@ -29,7 +29,7 @@ function getOutputPlayer (player: Player): External.Player {
     bid: player.bid,
     hand: player.hand.array.map(card => getOutputCard(card)),
     deck: player.deck.array.map(card => getOutputCard(card)),
-    play: player.play.array.map(card => getOutputCard(card)),
+    play: player.playArea.array.map(card => getOutputCard(card)),
     trash: player.trash.array.map(card => getPrivateTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney
@@ -49,7 +49,7 @@ function getOutputProfile (player: Player): External.Profile {
     handCount: player.hand.size(),
     handPossible: [],
     deck: player.deck.array.map(card => getOutputCard(card)),
-    play: player.play.array.map(card => getOutputCard(card)),
+    play: player.playArea.array.map(card => getOutputCard(card)),
     trash: player.trash.array.map(card => getPublicTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney
@@ -81,7 +81,7 @@ function getPublicTrashCard (card: Card): External.PublicTrashCard {
 
 function getOutputGame (state: State): Game {
   const publicEpisodes = state.history.children.filter(episode => {
-    return !episode.private
+    return !episode.spectate
   })
   const players = [...Object.values(state.players)]
   return {

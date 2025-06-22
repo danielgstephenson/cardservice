@@ -7,17 +7,25 @@ export interface Input {
   players: InputPlayer[]
   events: InputEvent[]
   names: {
+    archive: string
+    archivedTo: string
     card: string
     Card: string
     cards: string
     Cards: string
-    market: string
-    isAddedToMarket: string
-    archive: string
-    archivedTo: string
-    lowestRank: string
-    deck: string
     center: string
+    charge: string
+    charges: string
+    deck: string
+    earn: string
+    highestRank: string
+    inPlay: string
+    isAddedToMarket: string
+    lowestRank: string
+    major: string
+    market: string
+    minor: string
+    timeDoesNotPass: string
     trash: string
   }
 }

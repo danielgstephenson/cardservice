@@ -1,5 +1,8 @@
 import { CardGroup } from './cardGroup/cardGroup'
 import { Color } from './external'
+import { Player } from './player'
+import { Powers } from './powers/powers'
+import { Thief } from './powers/thief'
 import { State } from './state'
 
 export class Card {
@@ -13,6 +16,7 @@ export class Card {
   bonusPower: string
   trashRound?: number
   group?: CardGroup
+  powers?: Powers
 
   constructor (rank: number, state: State) {
     this.state = state
@@ -23,7 +27,19 @@ export class Card {
     this.firstPower = this.state.input.cardDetails.firstPowers[this.rank]
     this.secondPower = this.state.input.cardDetails.secondPowers[this.rank]
     this.bonusPower = this.state.input.cardDetails.bonusPowers[this.rank]
+    this.addPowers()
     this.state.cards[this.id] = this
+  }
+
+  play (player: Player): void {
+    if (this.powers == null) {
+      throw new Error(`card.play: card ${this.id} with rank ${this.rank} has no powers.`)
+    }
+    this.powers.execute(this, player)
+  }
+
+  addPowers (): void {
+    if (this.rank === 3) this.powers = new Thief()
   }
 
   static sortByRank (cards: Card[]): Card[] {
