@@ -104,6 +104,7 @@ export class State {
       card.play(player)
     })
     // Do the powers on each player's card
+    //  Note: messages will vary between playing and copying
     // Check to see if the game ends
     // Otherwise, card from the palace goes to the auction
     // The highest rank cards go to market or dungeon
