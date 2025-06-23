@@ -7,7 +7,6 @@ import { arrayToString, cardsToString, numberToString } from './translate'
 
 export function setup (state: State): void {
   const cardsInGame = getCardsInGame(state)
-  if (state.startingEpisode == null) throw new Error('startEpisode is null')
   if (cardsInGame.length === 0) throw new Error('cardsInGame.length === 0')
   const marketCard = cardsInGame[0]
   state.startingMarket = [marketCard]

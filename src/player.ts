@@ -36,7 +36,7 @@ export class Player {
     state.players[this.id] = this
   }
 
-  earn (amount: number, privateEpisode: Episode, publicEpisode: Episode): void {
+  earn (amount: number, parentEpisode: Episode): void {
     if (amount < 0) {
       throw new Error('player.earn: amount must non-negative')
     }
@@ -59,23 +59,20 @@ export class Player {
       privateMessage += `You earned ${minorAmount} ${names.minor}.`
       publicMessage += `${this.name} earned ${minorAmount} ${names.minor}.`
     }
-    privateEpisode.addPrivateChild(privateMessage, [this])
-    publicEpisode.addPublicChild(publicMessage)
+    const earnEpisode = parentEpisode.addYouChild(this, privateMessage, publicMessage)
     if (majorAmount > 0) {
       const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney}`
       const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney}`
-      privateEpisode.addPrivateChild(publicMessage, [this])
-      publicEpisode.addPublicChild(privateMessage)
+      earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
       const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney}`
       const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney}`
-      privateEpisode.addPrivateChild(publicMessage, [this])
-      publicEpisode.addPublicChild(privateMessage)
+      earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }
 
-  pay (amount: number, privateEpisode: Episode, publicEpisode: Episode): void {
+  pay (amount: number, parentEpisode: Episode): void {
     if (amount < 0) {
       throw new Error('player.pay: amount must non-negative')
     }
@@ -98,19 +95,16 @@ export class Player {
       privateMessage += `You paid ${minorAmount} ${names.minor}.`
       publicMessage += `${this.name} paid ${minorAmount} ${names.minor}.`
     }
-    privateEpisode.addPrivateChild(privateMessage, [this])
-    publicEpisode.addPublicChild(publicMessage)
+    const payEpisode = parentEpisode.addYouChild(this, privateMessage, publicMessage)
     if (majorAmount > 0) {
       const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney}`
       const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney}`
-      privateEpisode.addPrivateChild(publicMessage, [this])
-      publicEpisode.addPublicChild(privateMessage)
+      payEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
       const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney}`
       const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney}`
-      privateEpisode.addPrivateChild(publicMessage, [this])
-      publicEpisode.addPublicChild(privateMessage)
+      payEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }
 }

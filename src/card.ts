@@ -35,7 +35,7 @@ export class Card {
     if (this.powers == null) {
       throw new Error(`card.play: card ${this.id} with rank ${this.rank} has no powers.`)
     }
-    this.powers.execute(this, player)
+    this.powers.execute(this, player, player.state.history)
   }
 
   addPowers (): void {

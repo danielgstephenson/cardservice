@@ -5,15 +5,11 @@ import { Player } from './player'
 export interface EpisodeDef {
   state: State
   siblings: Episode[]
-  message: string
   playerId?: string
-  spectate?: boolean
-  viewers?: Player[]
 }
 
 export class Episode {
   children: Episode[] = []
-  message: string
   siblings: Episode[]
   state: State
   time: number
@@ -21,63 +17,67 @@ export class Episode {
   round: number
   firstInRound: boolean
   playerId?: string
-  spectate: boolean
-  viewers: string[]
+  spectateMessage?: string
+  messages: Record<string, string> = {}
 
   constructor (def: EpisodeDef) {
     this.id = String(def.state.rand.next())
     this.state = def.state
-    this.spectate = def.spectate ?? false
-    this.viewers = []
-    if (def.viewers != null) {
-      const ids = def.viewers.map(viewer => viewer.id)
-      this.viewers.push(...ids)
-    }
     this.time = Date.now()
     this.siblings = def.siblings
     this.siblings.push(this)
-    this.message = def.message
     this.round = this.state.round
     this.firstInRound = this.round !== this.state.lastMessageRound
     this.state.lastMessageRound = this.round
     this.playerId = def.playerId
   }
 
-  addSpectatorChild (message: string, playerId?: string): Episode {
+  addPublicMessage (text: string): void {
+    this.spectateMessage = text
+    const players = Object.values(this.state.players)
+    players.forEach(player => {
+      this.messages[player.id] = text
+    })
+  }
+
+  addPrivateMessage (player: Player, text: string): void {
+    this.messages[player.id] = text
+  }
+
+  addOthersMessage (player: Player, text: string): void {
+    this.spectateMessage = text
+    const players = Object.values(this.state.players)
+    const otherPlayers = players.filter(p => p.id !== player.id)
+    otherPlayers.forEach(otherPlayer => {
+      this.messages[otherPlayer.id] = text
+    })
+  }
+
+  addChild (playerId?: string): Episode {
     const episodeDef = {
       state: this.state,
       siblings: this.children,
-      private: false,
-      message,
       playerId
     }
     return new Episode(episodeDef)
   }
 
   addPublicChild (message: string, playerId?: string): Episode {
-    const viewers = Object.values(this.state.players)
-    return this.addChild(message, viewers, true, playerId)
+    const child = this.addChild(playerId)
+    child.addPublicMessage(message)
+    return child
   }
 
-  addOthersChild (message: string, excluded: Player[], playerId?: string): Episode {
-    const playerArray = Object.values(this.state.players)
-    const viewers = playerArray.filter(player => !excluded.includes(player))
-    return this.addChild(message, viewers, true, playerId)
+  addPrivateChild (player: Player, message: string, playerId?: string): Episode {
+    const child = this.addChild(playerId)
+    child.addPrivateMessage(player, message)
+    return child
   }
 
-  addPrivateChild (message: string, viewers: Player[], playerId?: string): Episode {
-    return this.addChild(message, viewers, false, playerId)
-  }
-
-  addChild (message: string, viewers: Player[], spectate?: boolean, playerId?: string): Episode {
-    const episodeDef = {
-      state: this.state,
-      siblings: this.children,
-      spectate,
-      viewers,
-      message,
-      playerId
-    }
-    return new Episode(episodeDef)
+  addYouChild (player: Player, privateMessage: string, publicMessage: string, playerId?: string): Episode {
+    const child = this.addChild(playerId)
+    child.addPrivateMessage(player, privateMessage)
+    child.addOthersMessage(player, publicMessage)
+    return child
   }
 }

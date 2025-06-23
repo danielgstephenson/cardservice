@@ -24,7 +24,7 @@ export class State {
   extraMarket = false
   playTied = false
   input: Input
-  startingEpisode?: Episode
+  startingEpisode: Episode
   startingHand: Card[] = []
   startingMarket: Card[] = []
   startingDeck: Card[] = []
@@ -37,6 +37,7 @@ export class State {
     this.rand = new Rand(input.seed)
     input.players.forEach(inputPlayer => new Player(this, inputPlayer))
     this.history = new History(this)
+    this.startingEpisode = this.history.addChild()
     setup(this)
     this.archive = new CardGroup(this.startingArchive)
     this.archive.label = 'archive'
@@ -70,7 +71,11 @@ export class State {
     if (player == null) {
       throw new Error(`handlePlanEvent: missing player ${event.userId}`)
     }
+    const publicMessage = `${player.name} is ready!`
+    const privateMessage = 'You are ready.'
+    const planEpisode = this.history.addYouChild(player, privateMessage, publicMessage)
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}`
+    planEpisode.addPrivateChild(player, oldHandMessage)
     const handIds = player.hand.array.map(card => card.id)
     console.log('handIds', handIds)
     const playCard = this.getCard(event.playCard.id)
@@ -78,20 +83,15 @@ export class State {
     player.playArea.add(playCard)
     player.trash.add(trashCard)
     const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}`
-    const publicMessage = `${player.name} is ready!`
-    this.history.addOthersChild(publicMessage, [player], player.id)
-    const privateMessage = 'You are ready.'
-    const privateEpisode = this.history.addPrivateChild(privateMessage, [player])
-    privateEpisode.addPrivateChild(oldHandMessage, [player])
-    privateEpisode.addPrivateChild(newHandMessage, [player])
+    planEpisode.addPrivateChild(player, newHandMessage)
     player.playReady = true
     const playerArray = Object.values(this.players)
     if (playerArray.some(player => !player.playReady)) return
     this.history.addPublicChild('Everyone is ready.', player.id)
-    playerArray.forEach(p => {
-      const trashRank = p.trash.array[p.trash.array.length - 1].rank
+    playerArray.forEach(trashPlayer => {
+      const trashRank = trashPlayer.trash.array[trashPlayer.trash.array.length - 1].rank
       const trashMessage = `You ${this.input.names.trash} ${trashRank}`
-      this.history.addPrivateChild(trashMessage, [p])
+      this.history.addPrivateChild(trashPlayer, trashMessage)
     })
     this.scandal()
     this.playCards()
@@ -103,7 +103,6 @@ export class State {
       const card = player.playArea.array[0]
       card.play(player)
     })
-    // Create a system to generate private and public message strings
     // Do the powers on each player's card
     // Check to see if the game ends
     // Otherwise, card from the palace goes to the auction

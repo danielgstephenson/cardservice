@@ -15,14 +15,14 @@ export function getOutput (state: State): Output {
 
 function getOutputPlayer (player: Player): External.Player {
   const playerEpisodes = player.state.history.children.filter(episode => {
-    return episode.viewers.some(id => id === player.id)
+    return episode.messages[player.id] != null
   })
   return {
     id: player.id,
     userId: player.userId,
     name: player.name,
     gameId: player.gameId,
-    history: playerEpisodes.map(episode => getOutputEpisode(episode)),
+    history: playerEpisodes.map(episode => getOutputEpisode(episode, player)),
     playReady: player.playReady,
     withdrawn: player.withdrawn,
     auctionReady: player.auctionReady,
@@ -81,7 +81,7 @@ function getPublicTrashCard (card: Card): External.PublicTrashCard {
 
 function getOutputGame (state: State): Game {
   const publicEpisodes = state.history.children.filter(episode => {
-    return !episode.spectate
+    return episode.spectateMessage != null
   })
   const players = [...Object.values(state.players)]
   return {
@@ -99,10 +99,26 @@ function getOutputGame (state: State): Game {
   }
 }
 
-function getOutputEpisode (episode: Episode): External.Episode {
+function getOutputEpisode (episode: Episode, player?: Player): External.Episode {
+  const message = player == null ? episode.spectateMessage : episode.messages[player.id]
+  if (message == null) {
+    console.log('episode.messages', episode.messages)
+    const viewerIds = Object.keys(episode.messages)
+    console.log('viewerIds', viewerIds)
+    const some = viewerIds.some(id => id === player?.id)
+    console.log('some', some)
+    console.log('player.id', player?.id)
+    throw new Error('getOutputEpisode: message == null')
+  }
+  const spectateChildren = episode.children.filter(child => child.spectateMessage != null)
+  const playerChildren = episode.children.filter(child => {
+    if (player == null) return false
+    return child.messages[player.id] != null
+  })
+  const children = player == null ? spectateChildren : playerChildren
   return {
-    message: episode.message,
-    children: episode.children.map(child => getOutputEpisode(child)),
+    message,
+    children: children.map(child => getOutputEpisode(child, player)),
     time: episode.time,
     id: episode.id,
     round: episode.round,
