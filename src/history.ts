@@ -5,8 +5,7 @@ export class History extends Episode {
   constructor (state: State) {
     const def: EpisodeDef = {
       state,
-      siblings: [],
-      message: 'HISTORY'
+      siblings: []
     }
     super(def)
   }

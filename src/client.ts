@@ -179,17 +179,25 @@ const input1: Input = {
   ],
   events: [],
   names: {
+    archive: 'dungeon',
+    archivedTo: 'imprisoned in',
     card: 'card',
     Card: 'Card',
     cards: 'cards',
     Cards: 'Cards',
-    market: 'trial',
-    isAddedToMarket: 'is put on trial',
-    archive: 'dungeon',
-    archivedTo: 'imprisoned in',
-    lowestRank: 'lowest rank',
-    deck: 'deck',
     center: 'palace',
+    charge: 'eye',
+    charges: 'eyes',
+    deck: 'deck',
+    earn: 'earn',
+    highestRank: 'highest rank',
+    inPlay: 'in play',
+    isAddedToMarket: 'is put on trial',
+    lowestRank: 'lowest rank',
+    major: 'gold',
+    market: 'trial',
+    minor: 'silver',
+    timeDoesNotPass: 'there is no scandal',
     trash: 'exile'
   }
 }
@@ -271,15 +279,19 @@ const details = {
   // play: output2p1.play,
   // trash: output2p1.trash,
   playerHistory: [
-    output2p1.history[0],
-    output2p1.history[1]
+    // output2p1.history[0],
+    // output2p1.history[1]
     // output2p1.history[2],
     // output2p1.history[3],
     // output2p1.history[4],
     // output2p1.history[5],
     // output2p1.history[6],
     // output2p1.history[7],
-    // output2p1.history[8]
+    // output2p1.history[8],
+    output2p1.history[9],
+    output2p1.history[10],
+    output2p1.history[11],
+    output2p1.history[12]
   ]
   // publicHistory: output2.game.history
 }
