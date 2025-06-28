@@ -30,7 +30,7 @@ function getOutputPlayer (player: Player): External.Player {
     hand: player.hand.array.map(card => getOutputCard(card)),
     deck: player.deck.array.map(card => getOutputCard(card)),
     play: player.playArea.array.map(card => getOutputCard(card)),
-    trash: player.trash.array.map(card => getPrivateTrashCard(card)),
+    trash: player.trashArea.array.map(card => getPrivateTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney
   }
@@ -50,7 +50,7 @@ function getOutputProfile (player: Player): External.Profile {
     handPossible: [],
     deck: player.deck.array.map(card => getOutputCard(card)),
     play: player.playArea.array.map(card => getOutputCard(card)),
-    trash: player.trash.array.map(card => getPublicTrashCard(card)),
+    trash: player.trashArea.array.map(card => getPublicTrashCard(card)),
     majorMoney: player.majorMoney,
     minorMoney: player.minorMoney
   }

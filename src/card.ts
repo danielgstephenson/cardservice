@@ -1,6 +1,5 @@
 import { CardGroup } from './cardGroup/cardGroup'
 import { Color } from './external'
-import { Player } from './player'
 import { Powers } from './powers/powers'
 import { Thief } from './powers/thief'
 import { State } from './state'
@@ -22,20 +21,13 @@ export class Card {
     this.state = state
     this.rank = rank
     this.id = String(this.state.rand.next())
-    this.charge = this.state.input.cardDetails.charges[this.rank]
-    this.color = this.state.input.cardDetails.colors[this.rank]
-    this.firstPower = this.state.input.cardDetails.firstPowers[this.rank]
-    this.secondPower = this.state.input.cardDetails.secondPowers[this.rank]
-    this.bonusPower = this.state.input.cardDetails.bonusPowers[this.rank]
+    this.charge = this.state.input.cardDetails.charges[this.rank - 1]
+    this.color = this.state.input.cardDetails.colors[this.rank - 1]
+    this.firstPower = this.state.input.cardDetails.firstPowers[this.rank - 1]
+    this.secondPower = this.state.input.cardDetails.secondPowers[this.rank - 1]
+    this.bonusPower = this.state.input.cardDetails.bonusPowers[this.rank - 1]
     this.addPowers()
     this.state.cards[this.id] = this
-  }
-
-  play (player: Player): void {
-    if (this.powers == null) {
-      throw new Error(`card.play: card ${this.id} with rank ${this.rank} has no powers.`)
-    }
-    this.powers.execute(this, player, player.state.history)
   }
 
   addPowers (): void {

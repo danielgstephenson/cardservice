@@ -1,10 +1,15 @@
 import { Card } from './card'
 
 export function arrayToString (input: number[] | string[]): string {
-  if (input.length === 0) throw new Error('arrayToString: input.length == 0')
   const array = [...input]
   const lastElement = array.pop()
   const firstString = array.join(', ')
+  if (input.length === 0) {
+    return 'empty'
+  }
+  if (input.length === 1) {
+    return `${input[0]}`
+  }
   if (lastElement == null) throw new Error('arrayToString: lastElement undefined')
   if (input.length === 2) {
     return `${input[0]} and ${lastElement}`
@@ -13,7 +18,6 @@ export function arrayToString (input: number[] | string[]): string {
 }
 
 export function cardsToString (cards: Card[]): string {
-  if (cards.length === 0) throw new Error('cardsToString: cards.length == 0')
   const ranks = cards.map(card => card.rank)
   return arrayToString(ranks)
 }

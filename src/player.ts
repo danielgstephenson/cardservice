@@ -3,6 +3,8 @@ import { State } from './state'
 import { CardGroup } from './cardGroup/cardGroup'
 import { Trash } from './cardGroup/trash'
 import { Episode } from './episode'
+import { Card } from './card'
+import { cardsToString } from './translate'
 
 export class Player {
   id: string
@@ -13,7 +15,7 @@ export class Player {
   hand: CardGroup
   deck: CardGroup
   playArea = new CardGroup()
-  trash = new Trash()
+  trashArea = new Trash()
   discard = new CardGroup()
   majorMoney: number
   minorMoney = 0
@@ -36,6 +38,36 @@ export class Player {
     state.players[this.id] = this
   }
 
+  trash (card: Card, silent?: boolean): void {
+    this.trashArea.add(card)
+    if (silent === true) return
+    this.addTrashEpisode(card)
+  }
+
+  addTrashEpisode (card: Card): void {
+    const names = this.state.input.names
+    const trashRank = this.trashArea.array[this.trashArea.array.length - 1].rank
+    const trashMessage = `You ${names.trash} ${trashRank}.`
+    const trashEpisode = this.state.history.addPrivateChild(this, trashMessage)
+    const oldTrash = this.trashArea.array.slice(1)
+    const oldTrashMessage = `Your trash was ${cardsToString(oldTrash)}.`
+    const newTrashMessage = `Your trash becomes ${cardsToString(this.trashArea.array)}.`
+    trashEpisode.addPrivateChild(this, oldTrashMessage)
+    trashEpisode.addPrivateChild(this, newTrashMessage)
+  }
+
+  play (card: Card): void {
+    if (card.powers == null) {
+      throw new Error(`Player.play: card ${card.id} with rank ${card.rank} has no powers.`)
+    }
+    const privateMessage = `You play ${card.rank}.`
+    const publicMessage = `${this.name} plays ${card.rank}.`
+    const playEpisode = this.state.history.addYouChild(this, privateMessage, publicMessage, this.id)
+    card.powers.execute(card, this, playEpisode)
+  }
+
+  copy (card: Card): void {}
+
   earn (amount: number, parentEpisode: Episode): void {
     if (amount < 0) {
       throw new Error('player.earn: amount must non-negative')
@@ -50,24 +82,24 @@ export class Player {
     let privateMessage = ''
     let publicMessage = ''
     if (majorAmount > 0 && minorAmount > 0) {
-      privateMessage += `You earned ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
-      publicMessage += `${this.name} earned ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
+      privateMessage += `You earn ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
+      publicMessage += `${this.name} earns ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
     } else if (majorAmount > 0 && minorAmount === 0) {
-      privateMessage += `You earned ${majorAmount} ${names.major}.`
-      publicMessage += `${this.name} earned ${majorAmount} ${names.major}.`
+      privateMessage += `You earn ${majorAmount} ${names.major}.`
+      publicMessage += `${this.name} earns ${majorAmount} ${names.major}.`
     } else if (majorAmount === 0 && minorAmount > 0) {
-      privateMessage += `You earned ${minorAmount} ${names.minor}.`
-      publicMessage += `${this.name} earned ${minorAmount} ${names.minor}.`
+      privateMessage += `You earn ${minorAmount} ${names.minor}.`
+      publicMessage += `${this.name} earns ${minorAmount} ${names.minor}.`
     }
     const earnEpisode = parentEpisode.addYouChild(this, privateMessage, publicMessage)
     if (majorAmount > 0) {
-      const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney}`
-      const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney}`
+      const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney} ${names.major}.`
+      const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney} ${names.major}.`
       earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
-      const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney}`
-      const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney}`
+      const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney} ${names.major}.`
+      const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney} ${names.major}.`
       earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }

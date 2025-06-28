@@ -74,6 +74,12 @@ export class Episode {
     return child
   }
 
+  addOthersChild (player: Player, message: string, playerId?: string): Episode {
+    const child = this.addChild(playerId)
+    child.addOthersMessage(player, message)
+    return child
+  }
+
   addYouChild (player: Player, privateMessage: string, publicMessage: string, playerId?: string): Episode {
     const child = this.addChild(playerId)
     child.addPrivateMessage(player, privateMessage)

@@ -1,5 +1,5 @@
 import { service } from '.'
-import { Input, Output, Player } from './external'
+import { Episode, Input, Output, Player } from './external'
 
 const input1: Input = {
   gameId: 'g1',
@@ -202,15 +202,16 @@ const input1: Input = {
   }
 }
 
+const output1 = service(input1)
+
 function getPlayer (output: Output, playerId: string): Player {
-  const player = output1.players.find(player => player.id === playerId)
+  const player = output.players.find(player => player.id === playerId)
   if (player == null) {
     throw new Error(`${playerId} not found in output1`)
   }
   return player
 }
 
-const output1 = service(input1)
 const output1p1 = getPlayer(output1, 'p1')
 const output1p2 = getPlayer(output1, 'p2')
 const output1p3 = getPlayer(output1, 'p3')
@@ -218,7 +219,6 @@ const output1p4 = getPlayer(output1, 'p4')
 const output1p5 = getPlayer(output1, 'p5')
 
 const input2 = structuredClone(input1)
-console.log('input2.seed', input2.seed)
 input2.events.push({
   type: 'plan',
   phase: 'play',
@@ -266,34 +266,48 @@ const output2p1 = output2.players.find(player => player.id === 'p1')
 if (output2p1 == null) {
   throw new Error('p1 not found in output2')
 }
-
-// output2.game.history.forEach(episode => {
-//   console.log(episode.message)
-//   episode.children.forEach(child => {
-//     console.log(child.message)
-//   })
-// })
-
-const details = {
-  // hand: output2p1.hand,
-  // play: output2p1.play,
-  // trash: output2p1.trash,
-  playerHistory: [
-    // output2p1.history[0],
-    // output2p1.history[1]
-    // output2p1.history[2],
-    // output2p1.history[3],
-    // output2p1.history[4],
-    // output2p1.history[5],
-    // output2p1.history[6],
-    // output2p1.history[7],
-    // output2p1.history[8],
-    output2p1.history[9],
-    output2p1.history[10],
-    output2p1.history[11],
-    output2p1.history[12]
-  ]
-  // publicHistory: output2.game.history
+const output2p2 = output2.players.find(player => player.id === 'p2')
+if (output2p2 == null) {
+  throw new Error('p2 not found in output2')
 }
-const pretty = JSON.stringify(details, null, 2)
-console.log(pretty)
+
+function print (props: {
+  depth?: number
+  episodes: Array<Episode | undefined>
+  path?: number[]
+}): void {
+  const depth = props.depth ?? 0
+  props.episodes.forEach((episode, index) => {
+    if (episode == null) {
+      console.info('--END OF HISTORY--')
+      return
+    }
+    const path = props.path ?? []
+    const newPath = [...path, index + 1]
+    const joined = newPath.join('.')
+    console.info(`${joined}. ${episode.message}`)
+    print({
+      depth: depth + 1,
+      episodes: episode.children,
+      path: newPath
+    })
+  })
+}
+
+
+
+// function printEpisodes (props: {
+//   episodes: Episode[]
+//   start: number
+//   end: number
+// }): void {
+//   const episodes = props.episodes.slice(props.start, props.end)
+
+//   print({ episodes })
+// }
+
+// printEpisodes({
+//   episodes: output2p1.history,
+//   start: 4,
+//   end: 15
+// })
