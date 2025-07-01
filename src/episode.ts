@@ -19,6 +19,7 @@ export class Episode {
   playerId?: string
   spectateMessage?: string
   messages: Record<string, string> = {}
+  groupId?: string
 
   constructor (def: EpisodeDef) {
     this.id = String(def.state.rand.next())
@@ -53,7 +54,7 @@ export class Episode {
     })
   }
 
-  addChild (playerId?: string): Episode {
+  private addChild (playerId?: string): Episode {
     const episodeDef = {
       state: this.state,
       siblings: this.children,

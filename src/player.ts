@@ -56,13 +56,14 @@ export class Player {
     trashEpisode.addPrivateChild(this, newTrashMessage)
   }
 
-  play (card: Card): void {
+  play (card: Card, groupId: string): void {
     if (card.powers == null) {
       throw new Error(`Player.play: card ${card.id} with rank ${card.rank} has no powers.`)
     }
     const privateMessage = `You play ${card.rank}.`
     const publicMessage = `${this.name} plays ${card.rank}.`
     const playEpisode = this.state.history.addYouChild(this, privateMessage, publicMessage, this.id)
+    playEpisode.groupId = groupId
     card.powers.execute(card, this, playEpisode)
   }
 

@@ -37,7 +37,9 @@ export class State {
     this.rand = new Rand(input.seed)
     input.players.forEach(inputPlayer => new Player(this, inputPlayer))
     this.history = new History(this)
-    this.startingEpisode = this.history.addChild()
+    this.history.spectateMessage = 'History'
+    input.players.forEach(player => { this.history.messages[player.id] = 'History' })
+    this.startingEpisode = this.history.addPublicChild('Starting Episode')
     setup(this)
     this.archive = new CardGroup(this.startingArchive)
     this.archive.label = 'archive'
@@ -70,18 +72,13 @@ export class State {
     if (player == null) {
       throw new Error(`handlePlanEvent: missing player ${event.userId}`)
     }
-    console.log('processPlanEvent', player.name)
     const publicMessage = `${player.name} is ready!`
     const privateMessage = 'You are ready.'
     const planEpisode = this.history.addYouChild(player, privateMessage, publicMessage)
-    console.log('planEpisode.messages', planEpisode.messages)
-    // if (player.name === 'n1') {
-    //   console.log('history', this.history.children.map(event => event.messages))
-    // }
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}`
     planEpisode.addPrivateChild(player, oldHandMessage)
     const trashCard = this.getCard(event.trashCard.id)
-    player.trash(trashCard)
+    player.trash(trashCard, true)
     const playCard = this.getCard(event.playCard.id)
     player.playArea.add(playCard)
     const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}`
@@ -107,9 +104,10 @@ export class State {
 
   playCards (): void {
     const players = Object.values(this.players)
+    const groupId = Math.random().toString()
     players.forEach(player => {
       const card = player.playArea.array[0]
-      player.play(card)
+      player.play(card, groupId)
     })
     // Do the powers on each player's card
     //   Note: messages will vary between playing and copying

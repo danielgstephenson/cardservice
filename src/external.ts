@@ -113,6 +113,7 @@ export interface Episode {
   round: number
   firstInRound: boolean
   playerId?: string
+  groupId?: string
 }
 
 export interface Card {

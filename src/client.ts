@@ -261,22 +261,15 @@ input2.events.push({
 })
 
 const output2 = service(input2)
-void output2
-const output2p1 = output2.players.find(player => player.id === 'p1')
-if (output2p1 == null) {
-  throw new Error('p1 not found in output2')
-}
-const output2p2 = output2.players.find(player => player.id === 'p2')
-if (output2p2 == null) {
-  throw new Error('p2 not found in output2')
-}
 
 function print (props: {
   depth?: number
   episodes: Array<Episode | undefined>
   path?: number[]
+  notation?: boolean
 }): void {
   const depth = props.depth ?? 0
+  const notation = props.notation ?? false
   props.episodes.forEach((episode, index) => {
     if (episode == null) {
       console.info('--END OF HISTORY--')
@@ -285,7 +278,7 @@ function print (props: {
     const path = props.path ?? []
     const newPath = [...path, index + 1]
     const joined = newPath.join('.')
-    console.info(`${joined}. ${episode.message}`)
+    console.info(`${joined}. ${episode.message} ${notation && episode.groupId != null ? `[${episode.groupId}, ${episode.playerId ?? 'NO PLAYER'}]` : ''}`)
     print({
       depth: depth + 1,
       episodes: episode.children,
@@ -294,20 +287,23 @@ function print (props: {
   })
 }
 
+function printEpisodes (props: {
+  start: number
+  end: number
+  output: Output
+  playerId: string
+}): void {
+  const player = props.output.players.find(player => player.id === props.playerId)
+  if (player == null) {
+    throw new Error(`${props.playerId} not found`)
+  }
+  const episodes = player.history.slice(props.start, props.end)
+  print({ episodes })
+}
 
-
-// function printEpisodes (props: {
-//   episodes: Episode[]
-//   start: number
-//   end: number
-// }): void {
-//   const episodes = props.episodes.slice(props.start, props.end)
-
-//   print({ episodes })
-// }
-
-// printEpisodes({
-//   episodes: output2p1.history,
-//   start: 4,
-//   end: 15
-// })
+printEpisodes({
+  start: 0,
+  end: 15,
+  output: output2,
+  playerId: 'p3'
+})

@@ -10,3 +10,7 @@ export function shuffle <T> (array: T[], rand: Rand): T[] {
     .sort((a, b) => a.priority - b.priority)
     .map(x => x.value)
 }
+
+export function unique <T> (array: T[]): T[] {
+  return [...new Set(array)]
+}

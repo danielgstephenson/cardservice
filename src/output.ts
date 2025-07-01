@@ -2,6 +2,7 @@ import { Card } from './card'
 import { Episode } from './episode'
 import * as External from './external'
 import { Output, Game } from './external'
+import { unique } from './math'
 import { Player } from './player'
 import { State } from './state'
 
@@ -14,15 +15,16 @@ export function getOutput (state: State): Output {
 }
 
 function getOutputPlayer (player: Player): External.Player {
-  const playerEpisodes = player.state.history.children.filter(episode => {
-    return episode.messages[player.id] != null
-  })
+  // const playerEpisodes = player.state.history.children.filter(episode => {
+  //   return episode.messages[player.id] != null
+  // })
+  const outputHistory = getOutputEpisode(player.state.history, player).children
   return {
     id: player.id,
     userId: player.userId,
     name: player.name,
     gameId: player.gameId,
-    history: playerEpisodes.map(episode => getOutputEpisode(episode, player)),
+    history: outputHistory, // playerEpisodes.map(episode => getOutputEpisode(episode, player)),
     playReady: player.playReady,
     withdrawn: player.withdrawn,
     auctionReady: player.auctionReady,
@@ -99,15 +101,14 @@ function getOutputGame (state: State): Game {
   }
 }
 
+/*
+What are the rules for ordering the childen of an episode?
+
+*/
+
 function getOutputEpisode (episode: Episode, player?: Player): External.Episode {
   const message = player == null ? episode.spectateMessage : episode.messages[player.id]
   if (message == null) {
-    console.log('episode.messages', episode.messages)
-    const viewerIds = Object.keys(episode.messages)
-    console.log('viewerIds', viewerIds)
-    const some = viewerIds.some(id => id === player?.id)
-    console.log('some', some)
-    console.log('player.id', player?.id)
     throw new Error('getOutputEpisode: message == null')
   }
   const spectateChildren = episode.children.filter(child => child.spectateMessage != null)
@@ -116,6 +117,28 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
     return child.messages[player.id] != null
   })
   const children = player == null ? spectateChildren : playerChildren
+  const childIndices = [...children.keys()]
+  const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
+  if (groupIds.length !== 0) console.log('groupIds', groupIds)
+  groupIds.forEach(groupId => {
+    if (player == null) return
+    const indices = childIndices.filter(i => children[i].groupId === groupId)
+    const sortedIndices = indices.toSorted((a, b) => {
+      const idA = children[a].playerId
+      const idB = children[b].playerId
+      if (idA === player.id && idB !== player.id) {
+        return -1
+      }
+      if (idA !== player.id && idB === player.id) {
+        return 1
+      }
+      return 0
+    })
+    const sortedEpisodes = sortedIndices.map(i => children[i])
+    sortedEpisodes.forEach((episode, i) => {
+      children[indices[i]] = episode
+    })
+  })
   return {
     message,
     children: children.map(child => getOutputEpisode(child, player)),
@@ -123,6 +146,7 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
     id: episode.id,
     round: episode.round,
     firstInRound: episode.firstInRound,
-    playerId: episode.playerId
+    playerId: episode.playerId,
+    groupId: episode.groupId
   }
 }
