@@ -1,4 +1,5 @@
 import { Card } from './card'
+import { Player } from './player'
 
 export function arrayToString (input: number[] | string[]): string {
   const array = [...input]
@@ -20,6 +21,11 @@ export function arrayToString (input: number[] | string[]): string {
 export function cardsToString (cards: Card[]): string {
   const ranks = cards.map(card => card.rank)
   return arrayToString(ranks)
+}
+
+export function playersToString (players: Player[]): string {
+  const names = players.map(player => player.name)
+  return arrayToString(names)
 }
 
 export function numberToString (n: number): string {

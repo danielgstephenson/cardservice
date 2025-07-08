@@ -297,13 +297,24 @@ function printEpisodes (props: {
   if (player == null) {
     throw new Error(`${props.playerId} not found`)
   }
+  if (props.end > player.history.length) {
+    const episode: Episode = {
+      message: '--- End of history ---',
+      children: [],
+      time: Math.random(),
+      id: Math.random().toString(36).substring(2, 15),
+      firstInRound: false,
+      round: Infinity
+    }
+    player.history.push(episode)
+  }
   const episodes = player.history.slice(props.start, props.end)
   print({ episodes })
 }
 
 printEpisodes({
   start: 0,
-  end: 15,
+  end: 18,
   output: output2,
   playerId: 'p3'
 })

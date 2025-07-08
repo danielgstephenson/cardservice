@@ -7,7 +7,8 @@ import { Card } from './card'
 import { History } from './history'
 import { setup } from './setup'
 import { CardGroup } from './cardGroup/cardGroup'
-import { cardsToString } from './translate'
+import { arrayToString, cardsToString, playersToString } from './translate'
+import { unique } from './math'
 
 export class State {
   startTime: number
@@ -72,8 +73,17 @@ export class State {
     if (player == null) {
       throw new Error(`handlePlanEvent: missing player ${event.userId}`)
     }
-    const publicMessage = `${player.name} is ready!`
-    const privateMessage = 'You are ready.'
+    const handSize = player.hand.array.length - 2
+    let publicMessage = `${player.name} is ready `
+    let privateMessage = 'You are ready '
+    if (handSize < 3) {
+      publicMessage += 'and draws up to 3.'
+      privateMessage += 'and you draw up to 3.'
+    }
+    if (handSize >= 3) {
+      publicMessage += `and already has ${handSize} cards in hand.`
+      privateMessage += `and you already have ${handSize} cards in hand.`
+    }
     const planEpisode = this.history.addYouChild(player, privateMessage, publicMessage)
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}`
     planEpisode.addPrivateChild(player, oldHandMessage)
@@ -85,6 +95,7 @@ export class State {
     planEpisode.addPrivateChild(player, newHandMessage)
     player.playReady = true
     const playerArray = Object.values(this.players)
+    player.drawUpToThree(planEpisode)
     if (playerArray.every(player => player.playReady)) {
       this.onAllReady()
     }
@@ -100,6 +111,7 @@ export class State {
     })
     this.scandal()
     this.playCards()
+    this.checkEnd()
   }
 
   playCards (): void {
@@ -109,13 +121,58 @@ export class State {
       const card = player.playArea.array[0]
       player.play(card, groupId)
     })
-    // Do the powers on each player's card
-    //   Note: messages will vary between playing and copying
     // Check to see if the game ends
     // Otherwise, card from the palace goes to the auction
     // The highest rank cards go to market or dungeon
     // announce bonus powers
     // begin the auction
+    // Note: messages will vary between playing and copying
+  }
+
+  checkEnd (): void {
+    const gameIsEnding = this.center.array.length === 0
+    if (gameIsEnding) this.endGame()
+  }
+
+  endGame (): void {
+    const players = Object.values(this.players)
+    const scores = players.map(player => player.getScore())
+    const maxScore = Math.max(...scores)
+    const winners = players.filter(player => player.getScore() === maxScore)
+    const losers = players.filter(player => player.getScore() !== maxScore)
+    const endEpisode = this.history.addChild()
+    const publicMessage =
+      winners.length === 1
+        ? `${winners[0].name} wins.`
+        : `${playersToString(winners)} tie for the win.`
+    endEpisode.spectateMessage = publicMessage
+    losers.forEach(loser => {
+      endEpisode.messages[loser.id] = publicMessage
+    })
+    winners.forEach(winner => {
+      const otherWinners = winners.filter(other => other.name !== winner.name)
+      const names = otherWinners.map(other => other.name)
+      names.unshift('You')
+      const winnerString = arrayToString(names)
+      const message =
+        names.length > 1
+          ? `${winnerString} tie for the win.`
+          : 'You win.'
+      endEpisode.messages[winner.id] = message
+    })
+    const uniqueScores = unique(scores)
+    uniqueScores.sort((a, b) => a - b)
+    uniqueScores.forEach(score => {
+      const groupId = `EndScore${score}`
+      const scorePlayers = players.filter(p => p.getScore() === score)
+      scorePlayers.forEach(player => {
+        const privateMessage = `Your score is ${score}.`
+        const publicMessage = `${player.name}'s score is ${score}.`
+        const scoreEpisode = endEpisode.addYouChild(player, privateMessage, publicMessage)
+        scoreEpisode.groupId = groupId
+        // ADD THE CHILDREN OF THE SCORE EPISODE
+      })
+    })
   }
 
   scandal (): void {

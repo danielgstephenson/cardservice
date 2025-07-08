@@ -1,7 +1,10 @@
 import Rand from 'rand-seed'
 
-export function range (a: number, b: number): number[] {
-  return [...Array(b - a + 1).keys()].map(i => a + i)
+export function range (a: number, b?: number): number[] {
+  if (b != null) {
+    return [...Array(b - a + 1).keys()].map(i => a + i)
+  }
+  return [...Array(a).keys()]
 }
 
 export function shuffle <T> (array: T[], rand: Rand): T[] {

@@ -54,7 +54,7 @@ export class Episode {
     })
   }
 
-  private addChild (playerId?: string): Episode {
+  addChild (playerId?: string): Episode {
     const episodeDef = {
       state: this.state,
       siblings: this.children,

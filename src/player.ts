@@ -5,6 +5,7 @@ import { Trash } from './cardGroup/trash'
 import { Episode } from './episode'
 import { Card } from './card'
 import { cardsToString } from './translate'
+import { range } from './math'
 
 export class Player {
   id: string
@@ -67,6 +68,63 @@ export class Player {
     card.powers.execute(card, this, playEpisode)
   }
 
+  draw (drawCount: number, parentEpisode: Episode, drawPawns?: boolean): void {
+    const names = this.state.input.names
+    const deckDrawCount = Math.min(drawCount, this.deck.array.length)
+    const deckDrawCards: Card[] = []
+    range(deckDrawCount).forEach(_ => {
+      const card = this.deck.array[0]
+      this.hand.add(card)
+      deckDrawCards.push(card)
+    })
+    if (drawCount > this.deck.array.length && drawPawns === true) {
+      const pawnCount = drawCount - this.deck.array.length
+      const pawns = range(pawnCount).map(_ => new Card(1, this.state))
+      pawns.forEach(pawn => this.hand.add(pawn))
+    }
+    const deckEmpty = this.deck.array.length === 0
+    if (deckEmpty && drawPawns === true) {
+      const privateMessage = `Your deck is empty, so you take ${drawCount} pawns from the bank.`
+      const publicMessage = `${this.name}'s deck is empty, so they take ${drawCount} pawns from the bank.`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    } else if (deckEmpty && drawPawns !== true) {
+      const privateMessage = 'Your deck is empty.'
+      const publicMessage = `${this.name}'s deck is empty.`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    } else if (drawPawns === true && drawCount > deckDrawCount) {
+      const deckDrawString = cardsToString(deckDrawCards)
+      const pawnCount = drawCount - deckDrawCount
+      let privateMessage = `You draw ${deckDrawString} from your ${names.deck} `
+      privateMessage += `and take ${pawnCount} pawns from the bank.`
+      let publicMessage = `${this.name} draws ${deckDrawString} ${names.cards} from their ${names.deck} `
+      publicMessage += `and takes ${pawnCount} pawns from the bank.`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    } else if (drawCount > deckDrawCount) {
+      const deckSize = this.deck.array.length
+      const deckString = cardsToString(this.deck.array)
+      const them = deckSize > 1 ? 'them all' : 'it'
+      let privateMessage = `Your ${names.deck} only has ${deckSize}, ${deckString}, `
+      privateMessage += `so you draw ${them}.`
+      let publicMessage = `${this.name}'s ${names.deck} only has ${deckSize}, ${deckString}, `
+      publicMessage += `so they draw ${them}.`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    } else {
+      const deckDrawString = cardsToString(deckDrawCards)
+      const privateMessage = `You draw ${drawCount} from your ${names.deck}, ${deckDrawString}.`
+      const publicMessage = `${this.name} draws ${drawCount} from their ${names.deck}, ${deckDrawString}.`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    }
+  }
+
+  drawUpToThree (planEpisode: Episode): void {
+    const drawCount = Math.max(0, 3 - this.hand.array.length)
+    if (drawCount === 0) return
+    const privateMessage = `You draw ${drawCount} to get back up to 3.`
+    const publicMessage = `${this.name} draws ${drawCount} to get back up to 3.`
+    const drawEpisode = planEpisode.addYouChild(this, privateMessage, publicMessage)
+    this.draw(drawCount, drawEpisode, true)
+  }
+
   copy (card: Card): void {}
 
   earn (amount: number, parentEpisode: Episode): void {
@@ -103,6 +161,15 @@ export class Player {
       const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney} ${names.major}.`
       earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
+  }
+
+  getScore (): number {
+    let score = 0
+    this.hand.array.forEach(card => {
+      score += card.rank
+    })
+    score += this.majorMoney + this.minorMoney
+    return score
   }
 
   pay (amount: number, parentEpisode: Episode): void {

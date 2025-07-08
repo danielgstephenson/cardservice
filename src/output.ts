@@ -101,11 +101,6 @@ function getOutputGame (state: State): Game {
   }
 }
 
-/*
-What are the rules for ordering the childen of an episode?
-
-*/
-
 function getOutputEpisode (episode: Episode, player?: Player): External.Episode {
   const message = player == null ? episode.spectateMessage : episode.messages[player.id]
   if (message == null) {
