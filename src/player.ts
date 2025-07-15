@@ -6,6 +6,8 @@ import { Episode } from './episode'
 import { Card } from './card'
 import { cardsToString } from './translate'
 import { range } from './math'
+import { Hand } from './cardGroup/hand'
+import { PlayerCardGroup } from './cardGroup/playerCardGroup'
 
 export class Player {
   id: string
@@ -13,12 +15,12 @@ export class Player {
   gameId: string
   state: State
   name: string
-  hand: CardGroup
+  hand: Hand
   deck: CardGroup
-  playArea = new CardGroup()
-  trashArea = new Trash()
-  discard = new CardGroup()
-  majorMoney: number
+  playArea = new PlayerCardGroup(this)
+  trashArea = new Trash(this)
+  discard = new PlayerCardGroup(this)
+  majorMoney = 50
   minorMoney = 0
   playReady = false
   withdrawn = false
@@ -31,11 +33,10 @@ export class Player {
     this.name = inputPlayer.name
     this.gameId = state.input.gameId
     this.state = state
-    this.hand = new CardGroup(state.startingHand)
+    this.hand = new Hand(this, state.startingHand)
     this.hand.label = `hand of player ${this.id}`
     this.deck = new CardGroup(state.startingDeck)
     this.hand.label = `deck of player ${this.id}`
-    this.majorMoney = 70 - 10 * state.input.playerCount
     state.players[this.id] = this
   }
 
@@ -65,6 +66,7 @@ export class Player {
     const publicMessage = `${this.name} plays ${card.rank}.`
     const playEpisode = this.state.history.addYouChild(this, privateMessage, publicMessage, this.id)
     playEpisode.groupId = groupId
+    this.hand.impossible(card)
     card.powers.execute(card, this, playEpisode)
   }
 

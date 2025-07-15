@@ -39,6 +39,7 @@ function getOutputPlayer (player: Player): External.Player {
 }
 
 function getOutputProfile (player: Player): External.Profile {
+  console.log('possible', player.name, player.hand.possible.map(card => card.rank))
   return {
     id: player.id,
     userId: player.userId,
@@ -49,7 +50,7 @@ function getOutputProfile (player: Player): External.Profile {
     auctionReady: player.auctionReady,
     bid: player.bid,
     handCount: player.hand.size(),
-    handPossible: [],
+    handPossible: player.hand.possible.map(card => getOutputCard(card)),
     deck: player.deck.array.map(card => getOutputCard(card)),
     play: player.playArea.array.map(card => getOutputCard(card)),
     trash: player.trashArea.array.map(card => getPublicTrashCard(card)),

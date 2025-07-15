@@ -121,17 +121,59 @@ export class State {
       const card = player.playArea.array[0]
       player.play(card, groupId)
     })
-    // Check to see if the game ends
-    // Otherwise, card from the palace goes to the auction
-    // The highest rank cards go to market or dungeon
-    // announce bonus powers
-    // begin the auction
-    // Note: messages will vary between playing and copying
   }
 
   checkEnd (): void {
     const gameIsEnding = this.center.array.length === 0
     if (gameIsEnding) this.endGame()
+    else this.startAuction()
+  }
+
+  startAuction (): void {
+    const names = this.input.names
+    const palaceCard = this.center.array[0]
+    if (palaceCard == null) {
+      throw new Error('onAllReady: palaceCard == null')
+    }
+    let publicMessage = 'The palace is not empty, so the lowest rank palace card, '
+    publicMessage += `${palaceCard.rank} ${names.isAddedToMarket}.`
+    const palaceEpisode = this.history.addPublicChild(publicMessage)
+    const oldPalaceMessage = `The palace was ${cardsToString(this.center.array)}.`
+    this.market.add(palaceCard)
+    const newPalaceMessage = `The palace becomes ${cardsToString(this.center.array)}.`
+    palaceEpisode.addPublicChild(oldPalaceMessage)
+    palaceEpisode.addPublicChild(newPalaceMessage)
+    const playCards = this.getPlayedCards()
+    const maxRank = Math.max(...playCards.map(card => card.rank))
+    const maxRankPlayCards = playCards.filter(card => card.rank >= maxRank)
+    if (maxRankPlayCards.length === 1) {
+      const maxRankCard = maxRankPlayCards[0]
+      this.market.add(maxRankCard)
+      const player = maxRankCard.player
+      if (player == null) {
+        throw new Error('startAuction: maxRankCard.player == null')
+      }
+      let privateMessage = `Your ${maxRankCard.rank} is the highest rank in play, `
+      privateMessage += `so it ${names.isAddedToMarket}.`
+      let publicMessage = `${player.name}'s ${maxRankCard.rank} is the highest rank in play, `
+      publicMessage += `so it ${names.isAddedToMarket}.`
+      const arrestEpisode = this.history.addYouChild(player, privateMessage, publicMessage)
+      void arrestEpisode
+      // ADD CHILDREN OF THE ARREST EPISODE
+    } else {
+      maxRankPlayCards.forEach(card => {
+        this.archive.add(card)
+        const player = card.player
+        if (player == null) {
+          throw new Error('startAuction: card.player == null')
+        }
+      })
+      // ANNOUNCE WHOSE CARDS GO THE DUNGEON
+    }
+    // The highest rank cards go to market or dungeon
+    // announce bonus powers
+    // begin the auction
+    // Note: messages will vary between playing and copying
   }
 
   endGame (): void {
