@@ -161,14 +161,32 @@ export class State {
       void arrestEpisode
       // ADD CHILDREN OF THE ARREST EPISODE
     } else {
+      const arrestPlayers: Player[] = []
+      const playerArray = Object.values(this.players)
       maxRankPlayCards.forEach(card => {
-        this.archive.add(card)
         const player = card.player
+        this.archive.add(card)
         if (player == null) {
           throw new Error('startAuction: card.player == null')
         }
+        arrestPlayers.push(player)
       })
-      // ANNOUNCE WHOSE CARDS GO THE DUNGEON
+      const otherPlayers = playerArray.filter(player => !arrestPlayers.includes(player))
+      const arrestEpisode = this.history.addChild()
+      otherPlayers.forEach(player => {
+        let message = `${playersToString(arrestPlayers)} played the highest rank, ${maxRank}, `
+        message += `so they are ${names.archivedTo} the ${names.archive}.`
+        arrestEpisode.messages[player.id] = message
+      })
+      arrestPlayers.forEach(player => {
+        const otherArrestPlayers = arrestPlayers.filter(other => other.id !== player.id)
+        const otherNames = otherArrestPlayers.map(other => other.name)
+        const arrestNames = ['You', ...otherNames]
+        let message = `${arrayToString(arrestNames)} played the highest rank, ${maxRank}, `
+        message += `so they are ${names.archivedTo} the ${names.archive}.`
+        arrestEpisode.messages[player.id] = message
+      })
+      // ADD CHILDREN OF THE ARREST EPISODE
     }
     // The highest rank cards go to market or dungeon
     // announce bonus powers

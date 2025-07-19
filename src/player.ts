@@ -1,6 +1,5 @@
 import { InputPlayer } from './external'
 import { State } from './state'
-import { CardGroup } from './cardGroup/cardGroup'
 import { Trash } from './cardGroup/trash'
 import { Episode } from './episode'
 import { Card } from './card'
@@ -8,6 +7,7 @@ import { cardsToString } from './translate'
 import { range } from './math'
 import { Hand } from './cardGroup/hand'
 import { PlayerCardGroup } from './cardGroup/playerCardGroup'
+import { Deck } from './cardGroup/deck'
 
 export class Player {
   id: string
@@ -16,7 +16,7 @@ export class Player {
   state: State
   name: string
   hand: Hand
-  deck: CardGroup
+  deck: Deck
   playArea = new PlayerCardGroup(this)
   trashArea = new Trash(this)
   discard = new PlayerCardGroup(this)
@@ -33,10 +33,8 @@ export class Player {
     this.name = inputPlayer.name
     this.gameId = state.input.gameId
     this.state = state
-    this.hand = new Hand(this, state.startingHand)
-    this.hand.label = `hand of player ${this.id}`
-    this.deck = new CardGroup(state.startingDeck)
-    this.hand.label = `deck of player ${this.id}`
+    this.hand = new Hand(this)
+    this.deck = new Deck(this)
     state.players[this.id] = this
   }
 

@@ -1,7 +1,7 @@
 import { service } from '.'
-import { Episode, Input, Output, Player } from './external'
+import { Episode, Input, InputEvent, Output, Player } from './external'
 
-const input1: Input = {
+const sharedInput: Input = {
   gameId: 'g1',
   seed: 's2',
   startingPlayerId: 'p1',
@@ -202,8 +202,12 @@ const input1: Input = {
   }
 }
 
-const output1 = service(input1)
+const input1 = structuredClone(sharedInput)
+const events1: InputEvent[] = []
+input1.events = events1
 
+console.log('Inputting for the first time...')
+const output1 = service(input1)
 function getPlayer (output: Output, playerId: string): Player {
   const player = output.players.find(player => player.id === playerId)
   if (player == null) {
@@ -218,48 +222,52 @@ const output1p3 = getPlayer(output1, 'p3')
 const output1p4 = getPlayer(output1, 'p4')
 const output1p5 = getPlayer(output1, 'p5')
 
-const input2 = structuredClone(input1)
-input2.events.push({
-  type: 'plan',
-  phase: 'play',
-  playCard: output1p1.hand[0],
-  trashCard: output1p1.hand[1],
-  time: 1,
-  userId: 'p1'
-})
-input2.events.push({
-  type: 'plan',
-  phase: 'play',
-  playCard: output1p2.hand[0],
-  trashCard: output1p2.hand[1],
-  time: 2,
-  userId: 'p2'
-})
-input2.events.push({
-  type: 'plan',
-  phase: 'play',
-  playCard: output1p3.hand[0],
-  trashCard: output1p3.hand[1],
-  time: 3,
-  userId: 'p3'
-})
-input2.events.push({
-  type: 'plan',
-  phase: 'play',
-  playCard: output1p4.hand[0],
-  trashCard: output1p4.hand[1],
-  time: 4,
-  userId: 'p4'
-})
-input2.events.push({
-  type: 'plan',
-  phase: 'play',
-  playCard: output1p5.hand[0],
-  trashCard: output1p5.hand[1],
-  time: 5,
-  userId: 'p5'
-})
-
+console.log('Inputting for the second time...')
+const input2 = structuredClone(sharedInput)
+const events2: InputEvent[] = [
+  ...input1.events,
+  {
+    type: 'plan',
+    phase: 'play',
+    playCard: output1p1.hand[0],
+    trashCard: output1p1.hand[1],
+    time: 1,
+    userId: 'p1'
+  },
+  {
+    type: 'plan',
+    phase: 'play',
+    playCard: output1p2.hand[0],
+    trashCard: output1p2.hand[1],
+    time: 2,
+    userId: 'p2'
+  },
+  {
+    type: 'plan',
+    phase: 'play',
+    playCard: output1p3.hand[0],
+    trashCard: output1p3.hand[1],
+    time: 3,
+    userId: 'p3'
+  },
+  {
+    type: 'plan',
+    phase: 'play',
+    playCard: output1p4.hand[0],
+    trashCard: output1p4.hand[1],
+    time: 4,
+    userId: 'p4'
+  },
+  {
+    type: 'plan',
+    phase: 'play',
+    playCard: output1p5.hand[0],
+    trashCard: output1p5.hand[1],
+    time: 5,
+    userId: 'p5'
+  }
+]
+input2.events = events2
 const output2 = service(input2)
 
 function print (props: {

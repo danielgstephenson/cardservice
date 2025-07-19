@@ -1,7 +1,8 @@
 import { Card } from './card'
+import { Deck } from './cardGroup/deck'
+import { Hand } from './cardGroup/hand'
 import { Color } from './external'
 import { range, shuffle } from './math'
-import { Player } from './player'
 import { State } from './state'
 import { arrayToString, cardsToString, numberToString } from './translate'
 
@@ -29,7 +30,9 @@ export function setup (state: State): void {
   const centerMessage = `The ${state.input.names.center} is ${centerString}.`
   state.startingEpisode.addPublicChild(centerMessage)
   state.input.players.forEach(inputPlayer => {
-    state.players[inputPlayer.id] = new Player(state, inputPlayer)
+    const player = state.players[inputPlayer.id]
+    player.hand = new Hand(player, state.startingHand)
+    player.deck = new Deck(player, state.startingDeck)
   })
   state.history.addPublicChild('Round 1 begins.')
 }

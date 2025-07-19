@@ -8,6 +8,7 @@ export class Hand extends PlayerCardGroup {
   constructor (player: Player, array?: Card[]) {
     super(player, array)
     this.array.forEach(card => { this.possible.push(card) })
+    this.label = `hand of player ${player.name}`
   }
 
   add (card: Card): void {
