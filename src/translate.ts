@@ -35,3 +35,10 @@ export function numberToString (n: number): string {
   if (n === 4) return 'four'
   throw new Error(`numberToString cannot convert number ${n} to a string.`)
 }
+
+export function isAre<T> (array: T[]): string {
+  if (array.length <= 1) {
+    return 'is'
+  }
+  return 'are'
+}

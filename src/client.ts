@@ -268,7 +268,21 @@ const events2: InputEvent[] = [
   }
 ]
 input2.events = events2
-const output2 = service(input2)
+
+const input3 = structuredClone(input2)
+input3.events.push({
+  type: 'bid',
+  phase: 'auction',
+  bid: 5,
+  time: 6,
+  userId: 'p1'
+}, {
+  type: 'concede',
+  phase: 'auction',
+  time: 7,
+  userId: 'p2'
+})
+const output3 = service(input3)
 
 function print (props: {
   depth?: number
@@ -297,7 +311,7 @@ function print (props: {
 
 function printEpisodes (props: {
   start: number
-  end: number
+  end?: number
   output: Output
   playerId: string
 }): void {
@@ -305,7 +319,7 @@ function printEpisodes (props: {
   if (player == null) {
     throw new Error(`${props.playerId} not found`)
   }
-  if (props.end > player.history.length) {
+  if (props.end == null || props.end > player.history.length) {
     const episode: Episode = {
       message: '--- End of history ---',
       children: [],
@@ -322,7 +336,6 @@ function printEpisodes (props: {
 
 printEpisodes({
   start: 0,
-  end: 20,
-  output: output2,
+  output: output3,
   playerId: 'p3'
 })

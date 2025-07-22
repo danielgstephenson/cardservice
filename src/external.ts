@@ -87,7 +87,8 @@ export interface WithdrawEvent extends Event {
   phase: 'auction'
 }
 
-export interface ArchiveEvent extends Event {
+// Offer to put the cards up for auction into the dungeon
+export interface ProposeArchiveEvent extends Event {
   type: 'archive'
   phase: 'auction'
 }
@@ -103,7 +104,7 @@ export interface TakeEvent extends Event {
   cardIds: string[]
 }
 
-export type InputEvent = PlanEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ArchiveEvent | ConcedeEvent | TakeEvent
+export type InputEvent = PlanEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ProposeArchiveEvent | ConcedeEvent | TakeEvent
 
 export interface Episode {
   message: string

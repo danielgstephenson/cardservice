@@ -1,5 +1,6 @@
 import Rand from 'rand-seed'
 import * as External from './external'
+import { toWords } from 'number-to-words'
 import { Phase, Input } from './external'
 import { Player } from './player'
 import { Episode } from './episode'
@@ -7,7 +8,7 @@ import { Card } from './card'
 import { History } from './history'
 import { setup } from './setup'
 import { CardGroup } from './cardGroup/cardGroup'
-import { arrayToString, cardsToString, playersToString } from './translate'
+import { arrayToString, cardsToString, isAre, playersToString } from './translate'
 import { unique } from './math'
 
 export class State {
@@ -62,7 +63,76 @@ export class State {
   processEvent (event: External.InputEvent): void {
     if (event.type === 'plan') {
       this.processPlanEvent(event)
+    } if (event.type === 'bid') {
+      this.processBidEvent(event)
+    } if (event.type === 'concede') {
+      this.processConcedeEvent(event)
     }
+  }
+
+  processBidEvent (event: External.BidEvent): void {
+    if (event.phase !== this.phase) {
+      throw new Error(`processBidEvent: this.phase === ${this.phase}`)
+    }
+    const player = this.players[event.userId]
+    if (player == null) {
+      throw new Error(`handlePlanEvent: missing player ${event.userId}`)
+    }
+    if (player.withdrawn) {
+      throw new Error(`processBidEvent: player ${player.id} is withdrawn.`)
+    }
+    if (player.auctionReady) {
+      throw new Error(`processBidEvent: player ${player.id} is auctionReady.`)
+    }
+    if (player.bid > event.bid) {
+      let message = `processBidEvent: player ${player.id} bid ${event.bid}, `
+      message += `which is less than their previous bid of ${player.bid}.`
+      throw new Error(message)
+    }
+    const money = player.majorMoney + player.minorMoney
+    if (event.bid > money) {
+      let message = `processBidEvent: player ${player.id} bid ${event.bid}, `
+      message += `which is more than their total money of ${money}.`
+      throw new Error(message)
+    }
+    const playerArray = Object.values(this.players)
+    playerArray.forEach(p => { p.auctionReady = false })
+    const bid = toWords(event.bid)
+    this.history.addPublicChild(`${player.name} bids ${bid}.`)
+    player.bid = event.bid
+  }
+
+  processConcedeEvent (event: External.ConcedeEvent): void {
+    if (event.phase !== this.phase) {
+      throw new Error(`processConcedeEvent: this.phase === ${this.phase}`)
+    }
+    const player = this.players[event.userId]
+    if (player == null) {
+      throw new Error(`processConcedeEvent: missing player ${event.userId}`)
+    }
+    if (player.withdrawn) {
+      throw new Error(`processConcedeEvent: player ${player.id} is withdrawn.`)
+    }
+    if (player.auctionReady) {
+      throw new Error(`processConcedeEvent: player ${player.id} is auctionReady.`)
+    }
+
+    const playerArray = Object.values(this.players)
+    const bids = playerArray.map(p => p.bid)
+    const bidCounts = bids.map(bid => {
+      return bids.filter(b => b === bid).length
+    })
+    if (Math.min(...bidCounts) > 1) {
+      throw new Error('processConcedeEvent: no untied bids.')
+    }
+    const untiedBids = bids.filter(bid => {
+      return bids.filter(b => b === bid).length === 1
+    })
+    if (player.bid === Math.max(...untiedBids)) {
+      throw new Error(`processConcedeEvent: player ${player.id} has the highest untied bid.`)
+    }
+    player.auctionReady = true
+    this.history.addPublicChild(`${player.name} is ready to concede the auction.`)
   }
 
   processPlanEvent (event: External.PlanEvent): void {
@@ -163,6 +233,7 @@ export class State {
     } else {
       const arrestPlayers: Player[] = []
       const playerArray = Object.values(this.players)
+      const oldDungeonCards = cardsToString(this.archive.array)
       maxRankPlayCards.forEach(card => {
         const player = card.player
         this.archive.add(card)
@@ -171,6 +242,7 @@ export class State {
         }
         arrestPlayers.push(player)
       })
+      const newDungeonCards = cardsToString(this.archive.array)
       const otherPlayers = playerArray.filter(player => !arrestPlayers.includes(player))
       const arrestEpisode = this.history.addChild()
       otherPlayers.forEach(player => {
@@ -186,12 +258,17 @@ export class State {
         message += `so they are ${names.archivedTo} the ${names.archive}.`
         arrestEpisode.messages[player.id] = message
       })
-      // ADD CHILDREN OF THE ARREST EPISODE
+      const oldDungeonMessage = `The ${names.archive} was ${oldDungeonCards}.`
+      const newDungeonMessage = `The ${names.archive} becomes ${newDungeonCards}.`
+      arrestEpisode.addPublicChild(oldDungeonMessage)
+      arrestEpisode.addPublicChild(newDungeonMessage)
     }
-    // The highest rank cards go to market or dungeon
-    // announce bonus powers
-    // begin the auction
-    // Note: messages will vary between playing and copying
+    // Announce Bonus Powers
+    const auctionCards = cardsToString(this.market.array)
+    let startAuctionMessage = `${auctionCards} ${isAre(this.archive.array)} up for `
+    startAuctionMessage += `auction from the ${names.market}.`
+    this.history.addPublicChild(startAuctionMessage)
+    this.phase = 'auction'
   }
 
   endGame (): void {

@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/number-to-words": "^1.2.3",
     "ts-standard": "^12.0.2"
   },
   "dependencies": {
+    "number-to-words": "^1.2.4",
     "rand-seed": "^2.1.4"
   },
   "ts-standard": {
