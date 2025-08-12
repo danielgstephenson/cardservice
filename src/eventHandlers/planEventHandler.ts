@@ -1,7 +1,5 @@
 import * as External from '../external'
-import { arrayToString, cardsToString, isAre, playersToString } from '../translate'
-import { unique } from '../math'
-import { Player } from '../player'
+import { cardsToString } from '../translate'
 import { State } from '../state'
 
 export class PlanEventHandler {
@@ -9,55 +7,6 @@ export class PlanEventHandler {
 
   constructor (state: State) {
     this.state = state
-  }
-
-  checkEnd (): void {
-    const state = this.state
-    const gameIsEnding = state.center.array.length === 0
-    if (gameIsEnding) this.endGame()
-    else this.startAuction()
-  }
-
-  endGame (): void {
-    const state = this.state
-    const players = Object.values(state.players)
-    const scores = players.map(player => player.getScore())
-    const maxScore = Math.max(...scores)
-    const winners = players.filter(player => player.getScore() === maxScore)
-    const losers = players.filter(player => player.getScore() !== maxScore)
-    const endEpisode = state.history.addChild()
-    const publicMessage =
-        winners.length === 1
-          ? `${winners[0].name} wins.`
-          : `${playersToString(winners)} tie for the win.`
-    endEpisode.spectateMessage = publicMessage
-    losers.forEach(loser => {
-      endEpisode.messages[loser.id] = publicMessage
-    })
-    winners.forEach(winner => {
-      const otherWinners = winners.filter(other => other.name !== winner.name)
-      const names = otherWinners.map(other => other.name)
-      names.unshift('You')
-      const winnerString = arrayToString(names)
-      const message =
-          names.length > 1
-            ? `${winnerString} tie for the win.`
-            : 'You win.'
-      endEpisode.messages[winner.id] = message
-    })
-    const uniqueScores = unique(scores)
-    uniqueScores.sort((a, b) => a - b)
-    uniqueScores.forEach(score => {
-      const groupId = `EndScore${score}`
-      const scorePlayers = players.filter(p => p.getScore() === score)
-      scorePlayers.forEach(player => {
-        const privateMessage = `Your score is ${score}.`
-        const publicMessage = `${player.name}'s score is ${score}.`
-        const scoreEpisode = endEpisode.addYouChild(player, privateMessage, publicMessage)
-        scoreEpisode.groupId = groupId
-        // ADD THE CHILDREN OF THE SCORE EPISODE
-      })
-    })
   }
 
   handle (event: External.PlanEvent): void {
@@ -108,7 +57,7 @@ export class PlanEventHandler {
     })
     this.scandal()
     state.playCards()
-    this.checkEnd()
+    state.checkEnd()
   }
 
   scandal (): void {
@@ -146,78 +95,5 @@ export class PlanEventHandler {
     })
     scandalEpisode.addPublicChild(oldCenterMessage)
     scandalEpisode.addPublicChild(newCenterMessage)
-  }
-
-  startAuction (): void {
-    const state = this.state
-    const names = state.input.names
-    const palaceCard = state.center.array[0]
-    if (palaceCard == null) {
-      throw new Error('onAllReady: palaceCard == null')
-    }
-    let publicMessage = 'The palace is not empty, so the lowest rank palace card, '
-    publicMessage += `${palaceCard.rank} ${names.isAddedToMarket}.`
-    const palaceEpisode = state.history.addPublicChild(publicMessage)
-    const oldPalaceMessage = `The palace was ${cardsToString(state.center.array)}.`
-    state.market.add(palaceCard)
-    const newPalaceMessage = `The palace becomes ${cardsToString(state.center.array)}.`
-    palaceEpisode.addPublicChild(oldPalaceMessage)
-    palaceEpisode.addPublicChild(newPalaceMessage)
-    const playCards = state.getPlayedCards()
-    const maxRank = Math.max(...playCards.map(card => card.rank))
-    const maxRankPlayCards = playCards.filter(card => card.rank >= maxRank)
-    if (maxRankPlayCards.length === 1) {
-      const maxRankCard = maxRankPlayCards[0]
-      state.market.add(maxRankCard)
-      const player = maxRankCard.player
-      if (player == null) {
-        throw new Error('startAuction: maxRankCard.player == null')
-      }
-      let privateMessage = `Your ${maxRankCard.rank} is the highest rank in play, `
-      privateMessage += `so it ${names.isAddedToMarket}.`
-      let publicMessage = `${player.name}'s ${maxRankCard.rank} is the highest rank in play, `
-      publicMessage += `so it ${names.isAddedToMarket}.`
-      const arrestEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
-      void arrestEpisode
-      // ADD CHILDREN OF THE ARREST EPISODE
-    } else {
-      const arrestPlayers: Player[] = []
-      const playerArray = Object.values(state.players)
-      const oldDungeonCards = cardsToString(state.archive.array)
-      maxRankPlayCards.forEach(card => {
-        const player = card.player
-        state.archive.add(card)
-        if (player == null) {
-          throw new Error('startAuction: card.player == null')
-        }
-        arrestPlayers.push(player)
-      })
-      const newDungeonCards = cardsToString(state.archive.array)
-      const otherPlayers = playerArray.filter(player => !arrestPlayers.includes(player))
-      const arrestEpisode = state.history.addChild()
-      otherPlayers.forEach(player => {
-        let message = `${playersToString(arrestPlayers)} played the highest rank, ${maxRank}, `
-        message += `so they are ${names.archivedTo} the ${names.archive}.`
-        arrestEpisode.messages[player.id] = message
-      })
-      arrestPlayers.forEach(player => {
-        const otherArrestPlayers = arrestPlayers.filter(other => other.id !== player.id)
-        const otherNames = otherArrestPlayers.map(other => other.name)
-        const arrestNames = ['You', ...otherNames]
-        let message = `${arrayToString(arrestNames)} played the highest rank, ${maxRank}, `
-        message += `so they are ${names.archivedTo} the ${names.archive}.`
-        arrestEpisode.messages[player.id] = message
-      })
-      const oldDungeonMessage = `The ${names.archive} was ${oldDungeonCards}.`
-      const newDungeonMessage = `The ${names.archive} becomes ${newDungeonCards}.`
-      arrestEpisode.addPublicChild(oldDungeonMessage)
-      arrestEpisode.addPublicChild(newDungeonMessage)
-    }
-    // Announce Bonus Powers
-    const auctionCards = cardsToString(state.market.array)
-    let startAuctionMessage = `${auctionCards} ${isAre(state.archive.array)} up for `
-    startAuctionMessage += `auction from the ${names.market}.`
-    state.history.addPublicChild(startAuctionMessage)
-    state.phase = 'auction'
   }
 }
