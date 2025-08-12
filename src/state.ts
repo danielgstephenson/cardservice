@@ -7,7 +7,7 @@ import { Card } from './card'
 import { History } from './history'
 import { setup } from './setup'
 import { CardGroup } from './cardGroup/cardGroup'
-import { EventHandler } from './eventHandlers/eventHandler'
+import { InputEventHandler } from './eventHandlers/inputEventHandler'
 
 export class State {
   startTime: number
@@ -15,7 +15,7 @@ export class State {
   market = new CardGroup()
   archive = new CardGroup()
   center = new CardGroup()
-  eventHandler = new EventHandler(this)
+  inputEventHandler = new InputEventHandler(this)
   players: Record<string, Player> = {}
   cards: Record<string, Card> = {}
   history: History
@@ -48,7 +48,7 @@ export class State {
     this.center.label = 'center'
     this.market = new CardGroup(this.startingMarket)
     this.market.label = 'market'
-    this.input.events.forEach(event => this.eventHandler.handle(event))
+    this.input.events.forEach(event => this.inputEventHandler.handle(event))
   }
 
   getCard (id: string): Card {

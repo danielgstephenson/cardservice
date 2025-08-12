@@ -4,7 +4,7 @@ import { PlanEventHandler } from './planEventHandler'
 import { BidEventHandler } from './bidEventHandler'
 import { ConcedeEventHandler } from './concedeEventHandler'
 
-export class EventHandler {
+export class InputEventHandler {
   state: State
   planEventHandler: PlanEventHandler
   bidEventHandler: BidEventHandler
