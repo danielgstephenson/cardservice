@@ -172,7 +172,7 @@ export class Player {
     return score
   }
 
-  pay (amount: number, parentEpisode: Episode): void {
+  pay (amount: number, parentEpisode: Episode, showTotal = false): void {
     if (amount < 0) {
       throw new Error('player.pay: amount must non-negative')
     }
@@ -183,28 +183,30 @@ export class Player {
     this.minorMoney -= minorAmount
     this.majorMoney -= majorAmount
     const names = this.state.input.names
-    let privateMessage = ''
-    let publicMessage = ''
-    if (majorAmount > 0 && minorAmount > 0) {
-      privateMessage += `You paid ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
-      publicMessage += `${this.name} paid ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
-    } else if (majorAmount > 0 && minorAmount === 0) {
-      privateMessage += `You paid ${majorAmount} ${names.major}.`
-      publicMessage += `${this.name} paid ${majorAmount} ${names.major}.`
-    } else if (majorAmount === 0 && minorAmount > 0) {
-      privateMessage += `You paid ${minorAmount} ${names.minor}.`
-      publicMessage += `${this.name} paid ${minorAmount} ${names.minor}.`
+    if (showTotal) {
+      let privateMessage = ''
+      let publicMessage = ''
+      if (majorAmount > 0 && minorAmount > 0) {
+        privateMessage += `You paid ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
+        publicMessage += `${this.name} paid ${majorAmount} ${names.major} and ${minorAmount} ${names.minor}.`
+      } else if (majorAmount > 0 && minorAmount === 0) {
+        privateMessage += `You paid ${majorAmount} ${names.major}.`
+        publicMessage += `${this.name} paid ${majorAmount} ${names.major}.`
+      } else if (majorAmount === 0 && minorAmount > 0) {
+        privateMessage += `You paid ${minorAmount} ${names.minor}.`
+        publicMessage += `${this.name} paid ${minorAmount} ${names.minor}.`
+      }
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
     }
-    const payEpisode = parentEpisode.addYouChild(this, privateMessage, publicMessage)
     if (majorAmount > 0) {
-      const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney}`
-      const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney}`
-      payEpisode.addYouChild(this, privateMessage, publicMessage)
+      const privateMessage = `You went from ${oldMajorMoney} ${names.major} to ${this.majorMoney} ${names.major}`
+      const publicMessage = `${this.name} went from ${oldMajorMoney} ${names.major} to ${this.majorMoney} ${names.major}`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
-      const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney}`
-      const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney}`
-      payEpisode.addYouChild(this, privateMessage, publicMessage)
+      const privateMessage = `You went from ${oldMinorMoney} ${names.minor} to ${this.minorMoney} ${names.minor}`
+      const publicMessage = `${this.name} went from ${oldMinorMoney} ${names.minor} to ${this.minorMoney} ${names.minor}`
+      parentEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }
 }

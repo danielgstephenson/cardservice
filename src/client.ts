@@ -281,6 +281,21 @@ input3.events.push({
   phase: 'auction',
   time: 7,
   userId: 'p2'
+}, {
+  type: 'concede',
+  phase: 'auction',
+  time: 8,
+  userId: 'p3'
+}, {
+  type: 'concede',
+  phase: 'auction',
+  time: 9,
+  userId: 'p4'
+}, {
+  type: 'concede',
+  phase: 'auction',
+  time: 10,
+  userId: 'p5'
 })
 const output3 = service(input3)
 

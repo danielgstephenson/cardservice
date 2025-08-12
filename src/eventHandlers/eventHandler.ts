@@ -1,0 +1,31 @@
+import { State } from '../state'
+import * as External from '../external'
+import { PlanEventHandler } from './planEventHandler'
+import { BidEventHandler } from './bidEventHandler'
+import { ConcedeEventHandler } from './concedeEventHandler'
+
+export class EventHandler {
+  state: State
+  planEventHandler: PlanEventHandler
+  bidEventHandler: BidEventHandler
+  concedeEventHandler: ConcedeEventHandler
+
+  constructor (state: State) {
+    this.state = state
+    this.planEventHandler = new PlanEventHandler(state)
+    this.bidEventHandler = new BidEventHandler(state)
+    this.concedeEventHandler = new ConcedeEventHandler(state)
+  }
+
+  handle (event: External.InputEvent): void {
+    if (event.type === 'plan') {
+      this.planEventHandler.handle(event)
+    } if (event.type === 'bid') {
+      this.bidEventHandler.handle(event)
+    } if (event.type === 'concede') {
+      this.concedeEventHandler.handle(event)
+    } if (event.type === 'take') {
+      // this.processTakeEvent(event)
+    }
+  }
+}
