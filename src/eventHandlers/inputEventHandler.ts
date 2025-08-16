@@ -3,18 +3,21 @@ import * as External from '../external'
 import { PlanEventHandler } from './planEventHandler'
 import { BidEventHandler } from './bidEventHandler'
 import { ConcedeEventHandler } from './concedeEventHandler'
+import { TakeEventHandler } from './takeEventHandler'
 
 export class InputEventHandler {
   state: State
   planEventHandler: PlanEventHandler
   bidEventHandler: BidEventHandler
   concedeEventHandler: ConcedeEventHandler
+  takeEventHandler: TakeEventHandler
 
   constructor (state: State) {
     this.state = state
     this.planEventHandler = new PlanEventHandler(state)
     this.bidEventHandler = new BidEventHandler(state)
     this.concedeEventHandler = new ConcedeEventHandler(state)
+    this.takeEventHandler = new TakeEventHandler(state)
   }
 
   handle (event: External.InputEvent): void {
@@ -25,7 +28,7 @@ export class InputEventHandler {
     } if (event.type === 'concede') {
       this.concedeEventHandler.handle(event)
     } if (event.type === 'take') {
-      // this.processTakeEvent(event)
+      this.takeEventHandler.handle(event)
     }
   }
 }

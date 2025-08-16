@@ -8,7 +8,7 @@ export class TakeEventHandler {
     this.state = state
   }
 
-  processTakeEvent (event: External.TakeEvent): void {
+  handle (event: External.TakeEvent): void {
     // RESUME HERE
   }
 }

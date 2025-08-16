@@ -18,6 +18,7 @@ export class Thief extends Powers {
     privateMessage += `earn 10 ${names.major}.`
     publicMessage += `${player.name} earns 10 ${names.major}.`
     const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
+    // Identify the highest rank card
     const colorMessage = `The highest rank ${names.card}, ${card.rank}, is ${card.color}.`
     episode1.addPublicChild(colorMessage)
     if (['Red', 'Yellow'].includes(card.color)) {
