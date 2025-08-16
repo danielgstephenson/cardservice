@@ -41,7 +41,6 @@ export interface CardDetails {
 
 export interface InputPlayer {
   id: string
-  userId: string
   name: string
 }
 
@@ -54,53 +53,43 @@ export type EventType =
   'pendingChoice' |
   'take'
 
-export type Phase = 'play' | 'auction'
 export interface Event {
-  time: number
+  playerId: string
   type: EventType
-  phase: Phase
-  userId: string
 }
 
 export interface PlanEvent extends Event {
   type: 'plan'
-  phase: 'play'
   playCard: Card
   trashCard: Card
 }
 
 export interface PendingChoiceEvent extends Event {
   type: 'pendingChoice'
-  phase: 'play'
   cardIds: string[]
   pendingChoiceId: string
 }
 
 export interface BidEvent extends Event {
   type: 'bid'
-  phase: 'auction'
   bid: number
 }
 
 export interface WithdrawEvent extends Event {
   type: 'withdraw'
-  phase: 'auction'
 }
 
 // Offer to put the cards up for auction into the dungeon
 export interface ProposeArchiveEvent extends Event {
   type: 'archive'
-  phase: 'auction'
 }
 
 export interface ConcedeEvent extends Event {
   type: 'concede'
-  phase: 'auction'
 }
 
 export interface TakeEvent extends Event {
   type: 'take'
-  phase: 'auction'
   cardIds: string[]
 }
 
@@ -134,7 +123,6 @@ export interface PublicTrashCard {
 
 export interface Player {
   id: string
-  userId: string
   name: string
   gameId: string
   history: Episode[]
@@ -151,8 +139,7 @@ export interface Player {
 }
 
 export interface Profile {
-  id: string
-  userId: string
+  playerId: string
   name: string
   gameId: string
   playReady: boolean
@@ -179,7 +166,7 @@ export interface PendingChoice {
 }
 
 export type Color = 'Green' | 'Red' | 'Yellow'
-
+export type Phase = 'play' | 'auction'
 export interface Game {
   startTime: number
   history: Episode[]

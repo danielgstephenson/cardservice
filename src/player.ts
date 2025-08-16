@@ -11,7 +11,6 @@ import { Deck } from './cardGroup/deck'
 
 export class Player {
   id: string
-  userId: string
   gameId: string
   state: State
   name: string
@@ -29,7 +28,6 @@ export class Player {
 
   constructor (state: State, inputPlayer: InputPlayer) {
     this.id = inputPlayer.id
-    this.userId = inputPlayer.userId
     this.name = inputPlayer.name
     this.gameId = state.input.gameId
     this.state = state

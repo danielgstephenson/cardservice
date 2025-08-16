@@ -1,5 +1,4 @@
-import { service } from '.'
-import { Episode, Input, InputEvent, Output, Player } from './external'
+import { Input } from '../external'
 
 const sharedInput: Input = {
   gameId: 'g1',
@@ -171,11 +170,11 @@ const sharedInput: Input = {
   },
   playerCount: 5,
   players: [
-    { id: 'p1', userId: 'u1', name: 'n1' },
-    { id: 'p2', userId: 'u2', name: 'n2' },
-    { id: 'p3', userId: 'u3', name: 'n3' },
-    { id: 'p4', userId: 'u4', name: 'n4' },
-    { id: 'p5', userId: 'u5', name: 'n5' }
+    { id: 'p1', name: 'n1' },
+    { id: 'p2', name: 'n2' },
+    { id: 'p3', name: 'n3' },
+    { id: 'p4', name: 'n4' },
+    { id: 'p5', name: 'n5' }
   ],
   events: [],
   names: {
@@ -201,156 +200,4 @@ const sharedInput: Input = {
     trash: 'exile'
   }
 }
-
-const input1 = structuredClone(sharedInput)
-const events1: InputEvent[] = []
-input1.events = events1
-
-console.log('Inputting for the first time...')
-const output1 = service(input1)
-function getPlayer (output: Output, playerId: string): Player {
-  const player = output.players.find(player => player.id === playerId)
-  if (player == null) {
-    throw new Error(`${playerId} not found in output1`)
-  }
-  return player
-}
-
-const output1p1 = getPlayer(output1, 'p1')
-const output1p2 = getPlayer(output1, 'p2')
-const output1p3 = getPlayer(output1, 'p3')
-const output1p4 = getPlayer(output1, 'p4')
-const output1p5 = getPlayer(output1, 'p5')
-
-console.log('Inputting for the second time...')
-const input2 = structuredClone(sharedInput)
-const events2: InputEvent[] = [
-  ...input1.events,
-  {
-    type: 'plan',
-    phase: 'play',
-    playCard: output1p1.hand[0],
-    trashCard: output1p1.hand[1],
-    time: 1,
-    userId: 'p1'
-  },
-  {
-    type: 'plan',
-    phase: 'play',
-    playCard: output1p2.hand[0],
-    trashCard: output1p2.hand[1],
-    time: 2,
-    userId: 'p2'
-  },
-  {
-    type: 'plan',
-    phase: 'play',
-    playCard: output1p3.hand[0],
-    trashCard: output1p3.hand[1],
-    time: 3,
-    userId: 'p3'
-  },
-  {
-    type: 'plan',
-    phase: 'play',
-    playCard: output1p4.hand[0],
-    trashCard: output1p4.hand[1],
-    time: 4,
-    userId: 'p4'
-  },
-  {
-    type: 'plan',
-    phase: 'play',
-    playCard: output1p5.hand[0],
-    trashCard: output1p5.hand[1],
-    time: 5,
-    userId: 'p5'
-  }
-]
-input2.events = events2
-
-const input3 = structuredClone(input2)
-input3.events.push({
-  type: 'bid',
-  phase: 'auction',
-  bid: 5,
-  time: 6,
-  userId: 'p1'
-}, {
-  type: 'concede',
-  phase: 'auction',
-  time: 7,
-  userId: 'p2'
-}, {
-  type: 'concede',
-  phase: 'auction',
-  time: 8,
-  userId: 'p3'
-}, {
-  type: 'concede',
-  phase: 'auction',
-  time: 9,
-  userId: 'p4'
-}, {
-  type: 'concede',
-  phase: 'auction',
-  time: 10,
-  userId: 'p5'
-})
-const output3 = service(input3)
-
-function print (props: {
-  depth?: number
-  episodes: Array<Episode | undefined>
-  path?: number[]
-  notation?: boolean
-}): void {
-  const depth = props.depth ?? 0
-  const notation = props.notation ?? false
-  props.episodes.forEach((episode, index) => {
-    if (episode == null) {
-      console.info('--END OF HISTORY--')
-      return
-    }
-    const path = props.path ?? []
-    const newPath = [...path, index + 1]
-    const joined = newPath.join('.')
-    console.info(`${joined}. ${episode.message} ${notation && episode.groupId != null ? `[${episode.groupId}, ${episode.playerId ?? 'NO PLAYER'}]` : ''}`)
-    print({
-      depth: depth + 1,
-      episodes: episode.children,
-      path: newPath
-    })
-  })
-}
-
-function printEpisodes (props: {
-  start: number
-  end?: number
-  output: Output
-  playerId: string
-}): void {
-  const player = props.output.players.find(player => player.id === props.playerId)
-  if (player == null) {
-    throw new Error(`${props.playerId} not found`)
-  }
-  if (props.end == null || props.end > player.history.length) {
-    const episode: Episode = {
-      message: '--- End of history ---',
-      children: [],
-      time: Math.random(),
-      id: Math.random().toString(36).substring(2, 15),
-      firstInRound: false,
-      round: Infinity
-    }
-    player.history.push(episode)
-  }
-  const episodes = player.history.slice(props.start, props.end)
-  print({ episodes })
-}
-
-printEpisodes({
-  start: 0,
-  output: output3,
-  playerId: 'p3'
-})
+export default sharedInput

@@ -21,7 +21,6 @@ function getOutputPlayer (player: Player): External.Player {
   const outputHistory = getOutputEpisode(player.state.history, player).children
   return {
     id: player.id,
-    userId: player.userId,
     name: player.name,
     gameId: player.gameId,
     history: outputHistory, // playerEpisodes.map(episode => getOutputEpisode(episode, player)),
@@ -39,10 +38,8 @@ function getOutputPlayer (player: Player): External.Player {
 }
 
 function getOutputProfile (player: Player): External.Profile {
-  console.log('possible', player.name, player.hand.possible.map(card => card.rank))
   return {
-    id: player.id,
-    userId: player.userId,
+    playerId: player.id,
     name: player.name,
     gameId: player.gameId,
     playReady: player.playReady,
@@ -115,7 +112,6 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
   const children = player == null ? spectateChildren : playerChildren
   const childIndices = [...children.keys()]
   const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
-  if (groupIds.length !== 0) console.log('groupIds', groupIds)
   groupIds.forEach(groupId => {
     if (player == null) return
     const indices = childIndices.filter(i => children[i].groupId === groupId)

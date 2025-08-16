@@ -10,13 +10,13 @@ export class BidEventHandler {
   }
 
   handle (event: External.BidEvent): void {
-    const state = this.state
-    if (event.phase !== state.phase) {
-      throw new Error(`processBidEvent: this.phase === ${state.phase}`)
+    if (this.state.phase !== 'auction') {
+      throw new Error('handleTakeEvent: event.phase !== "auction"')
     }
-    const player = state.players[event.userId]
+    const state = this.state
+    const player = state.players[event.playerId]
     if (player == null) {
-      throw new Error(`handlePlanEvent: missing player ${event.userId}`)
+      throw new Error(`handlePlanEvent: missing player ${event.playerId}`)
     }
     if (player.withdrawn) {
       throw new Error(`processBidEvent: player ${player.id} is withdrawn.`)

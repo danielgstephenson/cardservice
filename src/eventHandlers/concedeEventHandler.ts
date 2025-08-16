@@ -10,12 +10,12 @@ export class ConcedeEventHandler {
 
   handle (event: External.ConcedeEvent): void {
     const state = this.state
-    if (event.phase !== state.phase) {
-      throw new Error(`processConcedeEvent: this.phase === ${state.phase}`)
+    if (state.phase !== 'auction') {
+      throw new Error('processConcedeEvent: this.phase !== "auction"')
     }
-    const player = state.players[event.userId]
+    const player = state.players[event.playerId]
     if (player == null) {
-      throw new Error(`processConcedeEvent: missing player ${event.userId}`)
+      throw new Error(`processConcedeEvent: missing player ${event.playerId}`)
     }
     if (player.withdrawn) {
       throw new Error(`processConcedeEvent: player ${player.id} is withdrawn.`)

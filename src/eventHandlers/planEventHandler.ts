@@ -11,12 +11,12 @@ export class PlanEventHandler {
 
   handle (event: External.PlanEvent): void {
     const state = this.state
-    if (event.phase !== state.phase) {
-      throw new Error(`handlePlanEvent: this.phase === ${state.phase}`)
+    if (state.phase !== 'play') {
+      throw new Error('handlePlanEvent: this.phase !== "play"')
     }
-    const player = state.players[event.userId]
+    const player = state.players[event.playerId]
     if (player == null) {
-      throw new Error(`handlePlanEvent: missing player ${event.userId}`)
+      throw new Error(`handlePlanEvent: missing player ${event.playerId}`)
     }
     const handSize = player.hand.array.length - 2
     let publicMessage = `${player.name} is ready `
