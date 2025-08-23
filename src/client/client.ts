@@ -78,7 +78,7 @@ const input4 = structuredClone(input3)
 input4.events.push(
   {
     type: 'take',
-    cardIds: [output3.game.market[0].id, output3.game.market[1].id],
+    cardIds: [output3.game.market[1].id, output3.game.market[0].id],
     playerId: 'p1'
   }
 )

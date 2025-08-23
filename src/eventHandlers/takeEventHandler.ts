@@ -1,4 +1,3 @@
-import { Episode } from '../episode'
 import * as External from '../external'
 import { Player } from '../player'
 import { State } from '../state'
@@ -46,7 +45,6 @@ export class TakeEventHandler {
     const player = state.players[event.playerId]
     const takePublicMessage = `${player.name} took ${stringCards} from the ${names.center}.`
     state.history.addYouChild(player, takePrivateMessage, takePublicMessage)
-    cards.forEach(card => player.discard.add(card))
     const leftOverCards = this.state.market.array
     if (leftOverCards.length > 0) {
       const leftOverString = cardsToString(leftOverCards)
@@ -64,15 +62,28 @@ export class TakeEventHandler {
       dungeonEpisode.addPublicChild(becomesMessage)
     }
     const groupId = String(Math.random())
-    playerArray.forEach(player => this.discard(player, groupId))
+    playerArray.forEach(player => this.discard(player, groupId, event))
   }
 
-  discard (player: Player, groupId: string): void {
+  discard (player: Player, groupId: string, event: External.TakeEvent): void {
     const state = this.state
-    const privateMessage = 'You discard.'
-    const publicMessage = `${player.name} discards.`
-    const testEpisode = state.history.addYouChild(player, privateMessage, publicMessage, player.id)
-    testEpisode.groupId = groupId
-    // Replace the above test message with the real messages
+    const history = state.history
+    const names = state.input.names
+    const oldDeckString = cardsToString(player.deck.array)
+    const playCards = player.playArea.array
+    const winner = player.id === event.playerId
+    const auctionCards = winner ? event.cardIds.map(id => state.cards[id]) : []
+    const newCards = [...playCards, ...auctionCards]
+    newCards.sort((a, b) => a.rank - b.rank)
+    newCards.forEach(card => player.deck.add(card))
+    const newDeckString = cardsToString(player.deck.array)
+    const privateMessage = `Your ${names.deck} becomes ${newDeckString}`
+    const publicMessage = `${player.name}'s ${names.deck} becomes ${newDeckString}.`
+    const discardEpisode = history.addYouChild(player, privateMessage, publicMessage, player.id)
+    discardEpisode.groupId = groupId
+    const privateOldMessage = `Your ${names.deck} was ${oldDeckString}`
+    const publicOldMessage = `${player.name}'s ${names.deck} was ${oldDeckString}.`
+    discardEpisode.addYouChild(player, privateOldMessage, publicOldMessage, player.id)
+    // Add the second child where we talk about where the new cards came from
   }
 }

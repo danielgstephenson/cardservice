@@ -18,7 +18,6 @@ export class Player {
   deck: Deck
   playArea = new PlayerCardGroup(this)
   trashArea = new Trash(this)
-  discard = new PlayerCardGroup(this)
   majorMoney = 50
   minorMoney = 0
   playReady = false
