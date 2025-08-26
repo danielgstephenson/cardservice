@@ -109,7 +109,7 @@ export class TakeEventHandler {
       publicMessage += ` their ${names.deck}${orderString}.`
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
-    // ADD: Winner and Not Arrested Case
+    // ADD: Winner and Not Arrested Case (NOT UNTIL TESTING IS POSSIBLE)
     // The ${card.rank} you played and the ${cardsToString()}
     // you bought is/are added to your deck
     // from lowest to highest
