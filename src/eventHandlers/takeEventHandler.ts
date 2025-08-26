@@ -77,13 +77,41 @@ export class TakeEventHandler {
     newCards.sort((a, b) => a.rank - b.rank)
     newCards.forEach(card => player.deck.add(card))
     const newDeckString = cardsToString(player.deck.array)
-    const privateMessage = `Your ${names.deck} becomes ${newDeckString}`
+    if (newCards.length === 0) {
+      const privateMessage = `Your ${names.deck} remains ${newDeckString}.`
+      const publicMessage = `${player.name}'s ${names.deck} remains ${newDeckString}.`
+      const discardEpisode = history.addYouChild(player, privateMessage, publicMessage, player.id)
+      discardEpisode.groupId = groupId
+      return
+    }
+    const privateMessage = `Your ${names.deck} becomes ${newDeckString}.`
     const publicMessage = `${player.name}'s ${names.deck} becomes ${newDeckString}.`
     const discardEpisode = history.addYouChild(player, privateMessage, publicMessage, player.id)
     discardEpisode.groupId = groupId
     const privateOldMessage = `Your ${names.deck} was ${oldDeckString}`
     const publicOldMessage = `${player.name}'s ${names.deck} was ${oldDeckString}.`
     discardEpisode.addYouChild(player, privateOldMessage, publicOldMessage, player.id)
-    // Add the second child where we talk about where the new cards came from
+    const arrested = playCards.length === 0
+    if (!winner && !arrested) {
+      const rank = playCards[0].rank
+      const privateMessage = `The ${rank} you played is added to your deck.`
+      const publicMessage = `The ${rank} ${player.name} played is added to their deck.`
+      discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
+    }
+    if (winner && arrested) {
+      const boughtRanks = cardsToString(auctionCards)
+      const onlyOne = boughtRanks.length === 1
+      const orderString = onlyOne ? '' : ' from lowest to highest'
+      const are = onlyOne ? 'is' : 'are'
+      let privateMessage = `The ${boughtRanks} you bought ${are} added to`
+      privateMessage += ` your ${names.deck}${orderString}.`
+      let publicMessage = `The ${boughtRanks} ${player.name} bought ${are} added to`
+      publicMessage += ` their ${names.deck}${orderString}.`
+      discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
+    }
+    // ADD: Winner and Not Arrested Case
+    // The ${card.rank} you played and the ${cardsToString()}
+    // you bought is/are added to your deck
+    // from lowest to highest
   }
 }
