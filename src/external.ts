@@ -50,7 +50,8 @@ export type EventType =
   'withdraw' |
   'archive' |
   'concede' |
-  'pendingChoice' |
+  'chooseExile' |
+  'chooseHand' |
   'take'
 
 export interface Event {
@@ -64,9 +65,15 @@ export interface PlanEvent extends Event {
   trashCard: Card
 }
 
-export interface PendingChoiceEvent extends Event {
-  type: 'pendingChoice'
+export interface ChooseExileEvent extends Event {
+  type: 'chooseExile'
   cardIds: string[]
+  pendingChoiceId: string
+}
+
+export interface ChooseHandEvent extends Event {
+  type: 'chooseHand'
+  cardId: string
   pendingChoiceId: string
 }
 
@@ -93,7 +100,15 @@ export interface TakeEvent extends Event {
   cardIds: string[]
 }
 
-export type InputEvent = PlanEvent | PendingChoiceEvent | BidEvent | WithdrawEvent | ProposeArchiveEvent | ConcedeEvent | TakeEvent
+export type InputEvent =
+  PlanEvent |
+  ChooseExileEvent |
+  ChooseHandEvent |
+  BidEvent |
+  WithdrawEvent |
+  ProposeArchiveEvent |
+  ConcedeEvent |
+  TakeEvent
 
 export interface Episode {
   message: string
@@ -155,7 +170,7 @@ export interface Profile {
   minorMoney: number
 }
 
-export type PendingChoiceType = 'trash' | 'recover' | 'recovermutiple'
+export type PendingChoiceType = 'exile' | 'hand' | 'exiles'
 
 export interface PendingChoice {
   id: string

@@ -85,9 +85,52 @@ input4.events.push(
 
 console.log('Input 4...')
 const output4 = service(input4)
+const input5 = structuredClone(input4)
+input5.events.push(
+  {
+    type: 'plan',
+    playCard: getPlayer(output4, 'p1').hand[1],
+    playerId: 'p1',
+    trashCard: getPlayer(output4, 'p1').hand[0]
+  },
+  {
+    type: 'plan',
+    playCard: getPlayer(output4, 'p2').hand[1],
+    playerId: 'p2',
+    trashCard: getPlayer(output4, 'p2').hand[0]
+  },
+  {
+    type: 'plan',
+    playCard: getPlayer(output4, 'p3').hand[1],
+    playerId: 'p3',
+    trashCard: getPlayer(output4, 'p3').hand[0]
+  },
+  {
+    type: 'plan',
+    playCard: getPlayer(output4, 'p4').hand[1],
+    playerId: 'p4',
+    trashCard: getPlayer(output4, 'p4').hand[0]
+  },
+  {
+    type: 'plan',
+    playCard: getPlayer(output4, 'p5').hand[1],
+    playerId: 'p5',
+    trashCard: getPlayer(output4, 'p5').hand[0]
+  }
+)
+const output5 = service(input5)
 
 printEpisodes({
   start: 0,
-  output: output4,
+  output: output5,
   playerId: 'p3'
 })
+
+// const { history, ...game } = output4.game
+// const players = output4.players.map(player => {
+//   const { history, ...rest } = player
+//   return rest
+// })
+
+// console.log('game:', JSON.stringify(game, null, 2))
+// console.log('players:', JSON.stringify(players, null, 2))

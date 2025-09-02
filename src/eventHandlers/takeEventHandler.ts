@@ -63,6 +63,7 @@ export class TakeEventHandler {
     }
     const groupId = String(Math.random())
     playerArray.forEach(player => this.discard(player, groupId, event))
+    this.state.advanceRound()
   }
 
   discard (player: Player, groupId: string, event: External.TakeEvent): void {
@@ -110,8 +111,8 @@ export class TakeEventHandler {
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
     // ADD: Winner and Not Arrested Case (NOT UNTIL TESTING IS POSSIBLE)
-    // The ${card.rank} you played and the ${cardsToString()}
-    // you bought is/are added to your deck
-    // from lowest to highest
+    //   The ${card.rank} you played and the ${cardsToString()}
+    //   you bought is/are added to your deck
+    //   from lowest to highest
   }
 }

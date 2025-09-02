@@ -55,13 +55,38 @@ export class State {
     this.input.events.forEach(event => this.inputEventHandler.handle(event))
   }
 
+  advanceRound (): void {
+    this.round += 1
+    this.phase = 'play'
+    const players = Object.values(this.players)
+    players.forEach(player => {
+      player.auctionReady = false
+      player.playReady = false
+      player.bid = 0
+    })
+    const message = `Round ${this.round} begins.`
+    this.history.addPublicChild(message)
+    if (this.center.array.length > 1) return
+    // const names = this.input.names
+    if (this.center.array.length === 0) {
+      // Public: The ${names.center} is empty, so this is the final play phase.
+      // Players: Choose one final ${names.card} to ${names.exile} and one final ${names.card} to play
+      // Spectators: Everyone is choosing one final ${names.card} to ${names.exile} and one final ${pnames.card} to play
+      // return
+    }
+    // CASE 3
+    // Public: The ${names.center} has only 1 card left, so this might be the final play phase
+    // Players: Choose what might be your final ${names.card} to ${names.exile} and play
+    // Spectators: Everyone is choosing what might be their final ${names.card} to ${names.exile} play
+  }
+
   checkEnd (): void {
     const gameIsEnding = this.center.array.length === 0
-    if (gameIsEnding) this.end()
+    if (gameIsEnding) this.endGame()
     else this.auction.start()
   }
 
-  end (): void {
+  endGame (): void {
     const players = Object.values(this.players)
     const scores = players.map(player => player.getScore())
     const maxScore = Math.max(...scores)
