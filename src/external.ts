@@ -27,6 +27,7 @@ export interface Input {
     minor: string
     timeDoesNotPass: string
     trash: string
+    trashed: string
   }
 }
 

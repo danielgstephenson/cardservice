@@ -81,17 +81,20 @@ export class PlanEventHandler {
     }
     const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array)}.`
     const scandalEpisode = state.history.addPublicChild(eyesMessage)
+    const groupId = crypto.randomUUID()
     players.forEach(player => {
       const card = player.playArea.array[0]
       if (card == null) throw new Error('scandal: playCard == null')
-      const message = `You played ${card.rank} with ${card.charge} ${names.charges}.`
-      scandalEpisode.addPrivateChild(player, message)
-    })
-    players.forEach(player => {
-      const card = player.playArea.array[0]
-      if (card == null) throw new Error('scandal: playCard == null')
-      const message = `${player.name} played ${card.rank} with ${card.charge} ${names.charges}.`
-      scandalEpisode.addOthersChild(player, message)
+      const privateMessage = `You played ${card.rank} with ${card.charge} ${names.charges}.`
+      let publicMessage = `${player.name} played ${card.rank}`
+      publicMessage += ` with ${card.charge} ${names.charges}.`
+      const chargeEpisode = scandalEpisode.addYouChild(
+        player,
+        privateMessage,
+        publicMessage,
+        player.id
+      )
+      chargeEpisode.groupId = groupId
     })
     scandalEpisode.addPublicChild(oldCenterMessage)
     scandalEpisode.addPublicChild(newCenterMessage)

@@ -197,7 +197,8 @@ const sharedInput: Input = {
     market: 'trial',
     minor: 'silver',
     timeDoesNotPass: 'there is no scandal',
-    trash: 'exile'
+    trash: 'exile',
+    trashed: 'exiled'
   }
 }
 export default sharedInput

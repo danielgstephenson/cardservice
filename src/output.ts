@@ -5,6 +5,7 @@ import { Output, Game } from './external'
 import { unique } from './math'
 import { Player } from './player'
 import { State } from './state'
+import { History } from './history'
 
 export function getOutput (state: State): Output {
   const players = [...Object.values(state.players)]
@@ -112,6 +113,15 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
   const children = player == null ? spectateChildren : playerChildren
   const childIndices = [...children.keys()]
   const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
+  if (groupIds.length > 0) {
+    console.log(episode.messages, groupIds)
+    const indices = childIndices.filter(i => children[i].groupId === groupIds[0])
+    const sortingChildren = indices.map(i => children[i])
+    sortingChildren.forEach(child => {
+      console.log(child.messages)
+    })
+  }
+  const sortSign = episode instanceof History ? 1 : -1
   groupIds.forEach(groupId => {
     if (player == null) return
     const indices = childIndices.filter(i => children[i].groupId === groupId)
@@ -119,10 +129,10 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
       const idA = children[a].playerId
       const idB = children[b].playerId
       if (idA === player.id && idB !== player.id) {
-        return -1
+        return 1 * sortSign
       }
       if (idA !== player.id && idB === player.id) {
-        return 1
+        return -1 * sortSign
       }
       return 0
     })
