@@ -35,7 +35,7 @@
     "rand-seed": "^2.1.4"
   },
   "ts-standard": {
-    "project": "src/tsconfig.json",
+    "project": "./tsconfig.json",
     "ignore": [
       "dist"
     ]

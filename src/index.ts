@@ -32,12 +32,12 @@ export interface Input {
 }
 
 export interface CardDetails {
-  ranks: number[]
-  colors: Color[]
-  charges: number[]
-  firstPowers: string[]
-  secondPowers: string[]
-  bonusPowers: string[]
+  ranks: number[] | readonly number[]
+  colors: Color[] | readonly Color[]
+  charges: number[] | readonly number[]
+  firstPowers: string[] | readonly string[]
+  secondPowers: string[] | readonly string[]
+  bonusPowers: string[] | readonly string[]
 }
 
 export interface InputPlayer {
