@@ -3,7 +3,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "outDir": "../dist",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "lib": [
       "ES6",
@@ -12,9 +12,8 @@
     ],
     "strict": true,
     "sourceMap": true,
-    "composite": true,
-    "rootDir": ".",
+    "rootDir": "./src"
   },
-  "include": ["**/*"],
-  "exclude": ["../dist/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist/**/*", "tsup.config.ts"]
 }

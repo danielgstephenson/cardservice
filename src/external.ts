@@ -203,3 +203,5 @@ export interface Output {
 }
 
 export type Service = (input: Input) => Output
+
+export { service } from './index'

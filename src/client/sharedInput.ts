@@ -168,7 +168,7 @@ const sharedInput: Input = {
       ''
     ]
   },
-  playerCount: 5,
+  playerCount: 2,
   players: [
     { id: 'p1', name: 'n1' },
     { id: 'p2', name: 'n2' },
