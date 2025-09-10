@@ -1,4 +1,4 @@
-import { Player, Output } from '../external'
+import { Player, Output } from '..'
 
 export default function getPlayer (output: Output, playerId: string): Player {
   const player = output.players.find(player => player.id === playerId)

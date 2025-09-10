@@ -1,4 +1,4 @@
-import { Episode } from '../external'
+import { Episode } from '..'
 
 export default function print (props: {
   depth?: number

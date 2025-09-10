@@ -1,4 +1,4 @@
-import { } from './external'
+import { } from '.'
 import { State } from './state'
 import { Player } from './player'
 

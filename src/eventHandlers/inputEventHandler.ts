@@ -1,5 +1,5 @@
 import { State } from '../state'
-import * as External from '../external'
+import * as External from '..'
 import { PlanEventHandler } from './planEventHandler'
 import { BidEventHandler } from './bidEventHandler'
 import { ConcedeEventHandler } from './concedeEventHandler'

@@ -1,6 +1,6 @@
 import Rand from 'rand-seed'
-import * as External from './external'
-import { Phase, Input } from './external'
+import * as External from '.'
+import { Phase, Input } from '.'
 import { Player } from './player'
 import { Episode } from './episode'
 import { Card } from './card'

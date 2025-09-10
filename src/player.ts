@@ -1,4 +1,4 @@
-import { InputPlayer } from './external'
+import { InputPlayer } from '.'
 import { State } from './state'
 import { Trash } from './cardGroup/trash'
 import { Episode } from './episode'

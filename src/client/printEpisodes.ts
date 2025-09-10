@@ -1,4 +1,4 @@
-import { Episode, Output } from '../external'
+import { Episode, Output } from '..'
 import print from './print'
 
 export default function printEpisodes (props: {

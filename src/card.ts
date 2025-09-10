@@ -1,5 +1,5 @@
 import { CardGroup } from './cardGroup/cardGroup'
-import { Color } from './external'
+import { Color } from '.'
 import { Player } from './player'
 import { Diplomat } from './powers/diplomat'
 import { Powers } from './powers/powers'

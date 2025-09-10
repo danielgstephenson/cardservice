@@ -1,4 +1,4 @@
-import { Input } from '../external'
+import { Input } from '..'
 
 const sharedInput: Input = {
   gameId: 'g1',

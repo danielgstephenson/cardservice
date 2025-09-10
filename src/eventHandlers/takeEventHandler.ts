@@ -1,4 +1,4 @@
-import * as External from '../external'
+import * as External from '..'
 import { Player } from '../player'
 import { State } from '../state'
 import { cardsToString, isAre } from '../translate'

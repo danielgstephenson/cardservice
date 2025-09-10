@@ -1,5 +1,5 @@
 import { toWords } from 'number-to-words'
-import * as External from '../external'
+import * as External from '..'
 import { State } from '../state'
 
 export class BidEventHandler {

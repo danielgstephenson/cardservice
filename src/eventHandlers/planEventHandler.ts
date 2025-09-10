@@ -1,4 +1,4 @@
-import * as External from '../external'
+import * as External from '..'
 import { cardsToString } from '../translate'
 import { State } from '../state'
 

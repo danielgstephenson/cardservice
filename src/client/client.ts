@@ -1,5 +1,5 @@
-import { service } from '..'
-import { InputEvent } from '../external'
+import { service } from '../service'
+import { InputEvent } from '..'
 import getPlayer from './getPlayer'
 import printEpisodes from './printEpisodes'
 import sharedInput from './sharedInput'

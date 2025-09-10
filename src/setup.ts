@@ -1,7 +1,7 @@
 import { Card } from './card'
 import { Deck } from './cardGroup/deck'
 import { Hand } from './cardGroup/hand'
-import { Color } from './external'
+import { Color } from '.'
 import { range, shuffle } from './math'
 import { State } from './state'
 import { arrayToString, cardsToString, numberToString } from './translate'
