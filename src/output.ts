@@ -96,7 +96,8 @@ function getOutputGame (state: State): Game {
     round: state.round,
     phase: state.phase,
     extraMarket: state.extraMarket,
-    playTied: state.playTied
+    playTied: state.playTied,
+    final: false
   }
 }
 

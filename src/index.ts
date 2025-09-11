@@ -195,6 +195,7 @@ export interface Game {
   phase: Phase
   extraMarket: boolean
   playTied: boolean
+  final: boolean
 }
 
 export interface Output {
