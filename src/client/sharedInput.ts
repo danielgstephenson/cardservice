@@ -180,6 +180,7 @@ const sharedInput: Input = {
   names: {
     archive: 'dungeon',
     archivedTo: 'imprisoned in',
+    areAddedToMarket: 'are put on trial',
     card: 'card',
     Card: 'Card',
     cards: 'cards',
@@ -189,14 +190,17 @@ const sharedInput: Input = {
     charges: 'eyes',
     deck: 'deck',
     earn: 'earn',
+    empress: 'the Empress',
     highestRank: 'highest rank',
+    joan: 'Joan of Arc',
     inPlay: 'in play',
     isAddedToMarket: 'is put on trial',
     lowestRank: 'lowest rank',
     major: 'gold',
     market: 'trial',
     minor: 'silver',
-    timeDoesNotPass: 'there is no scandal',
+    timeDoesNotPass: 'there is only a minor scandal',
+    timeDoesPass: 'there is a major scandal',
     trash: 'exile',
     trashed: 'exiled'
   }

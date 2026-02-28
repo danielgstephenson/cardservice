@@ -80,19 +80,16 @@ export class State {
     // Spectators: Everyone is choosing what might be their final ${names.card} to ${names.exile} play
   }
 
-  checkEnd (): void {
-    const gameIsEnding = this.center.array.length === 0
-    if (gameIsEnding) this.endGame()
-    else this.auction.start()
-  }
-
   endGame (): void {
+    const names = this.input.names
     const players = Object.values(this.players)
     const scores = players.map(player => player.getScore())
     const maxScore = Math.max(...scores)
     const winners = players.filter(player => player.getScore() === maxScore)
     const losers = players.filter(player => player.getScore() !== maxScore)
+    this.phase = 'end'
     const endEpisode = this.history.addChild()
+    endEpisode.addPublicChild(`The ${names.empress} is in the ${names.market}, so the game ends.`)
     const publicMessage =
           winners.length === 1
             ? `${winners[0].name} wins.`

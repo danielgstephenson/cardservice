@@ -11,6 +11,7 @@ export interface Input {
   names: {
     archive: string
     archivedTo: string
+    areAddedToMarket: string
     card: string
     Card: string
     cards: string
@@ -20,14 +21,17 @@ export interface Input {
     charges: string
     deck: string
     earn: string
+    empress: string
     highestRank: string
     inPlay: string
     isAddedToMarket: string
+    joan: string
     lowestRank: string
     major: string
     market: string
     minor: string
     timeDoesNotPass: string
+    timeDoesPass: string
     trash: string
     trashed: string
   }
@@ -187,7 +191,7 @@ export interface PendingChoice {
   copyingCard: Card | null
 }
 
-export type Phase = 'play' | 'auction'
+export type Phase = 'play' | 'auction' | 'end'
 export interface Game {
   startTime: number
   history: Episode[]

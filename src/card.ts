@@ -1,10 +1,10 @@
 import { CardGroup } from './cardGroup/cardGroup'
 import { Color } from './external'
 import { Player } from './player'
-import { Diplomat } from './powers/diplomat'
 import { Powers } from './powers/powers'
-import { Thief } from './powers/thief'
+import { Pirate } from './powers/pirate'
 import { State } from './state'
+import { Princess } from './powers/princess'
 
 export class Card {
   state: State
@@ -34,8 +34,8 @@ export class Card {
   }
 
   addPowers (): void {
-    if (this.rank === 3) this.powers = new Thief()
-    if (this.rank === 7) this.powers = new Diplomat()
+    if (this.rank === 3) this.powers = new Pirate()
+    if (this.rank === 7) this.powers = new Princess()
   }
 
   static sortByRank (cards: Card[]): Card[] {

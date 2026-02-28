@@ -30,13 +30,13 @@ export class PlanEventHandler {
       privateMessage += `and you already have ${handSize} cards in hand.`
     }
     const planEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
-    const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}`
+    const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}.`
     planEpisode.addPrivateChild(player, oldHandMessage)
     const trashCard = state.getCard(event.trashCard.id)
     player.trash(trashCard, true)
     const playCard = state.getCard(event.playCard.id)
     player.playArea.add(playCard)
-    const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}`
+    const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}.`
     planEpisode.addPrivateChild(player, newHandMessage)
     player.playReady = true
     const playerArray = Object.values(state.players)
@@ -55,9 +55,10 @@ export class PlanEventHandler {
       if (trashCard == null) throw new Error('onAllReady: trashCard == null')
       player.addTrashEpisode(trashCard)
     })
-    this.scandal()
     state.playCards()
-    state.checkEnd()
+    this.scandal()
+    if (state.phase === 'end') return
+    state.auction.start()
   }
 
   scandal (): void {
@@ -69,15 +70,35 @@ export class PlanEventHandler {
     let eyesMessage = `There are ${totalCharge} total ${names.charges}, `
     const oldCenterMessage = `The ${names.center} was ${cardsToString(state.center.array)}.`
     if (totalCharge > players.length) {
-      const centerCard = state.center.array[0]
-      if (centerCard == null) {
-        eyesMessage += `but the ${names.center} is empty because the game is ending.`
+      const centerCard0 = state.center.array[0]
+      const centerCard1 = state.center.array[1]
+      if (centerCard0 == null) {
+        eyesMessage += `more than the ${players.length} players `
+        eyesMessage += `but only ${names.empress} remains in the ${names.center} `
+        eyesMessage += `so ${names.empress} ${names.isAddedToMarket}.`
+        state.endGame()
+      } else if (centerCard1 == null) {
+        state.market.add(centerCard0)
+        eyesMessage += `more than the ${players.length} players, so ${names.timeDoesPass} `
+        eyesMessage += `and ${centerCard0.rank} and ${names.empress} ${names.areAddedToMarket}.`
+        state.endGame()
       } else {
-        state.market.add(centerCard)
-        eyesMessage += `more that the ${players.length} players, so ${centerCard.rank} ${names.isAddedToMarket}.`
+        state.market.add(centerCard0)
+        state.market.add(centerCard1)
+        eyesMessage += `more than the ${players.length} players, so ${names.timeDoesPass} `
+        eyesMessage += `and ${centerCard0.rank} and ${centerCard1.rank} ${names.areAddedToMarket}.`
       }
     } else {
-      eyesMessage += `not more than the ${players.length} players, so ${names.timeDoesNotPass}.`
+      const centerCard0 = state.center.array[0]
+      if (centerCard0 == null) {
+        eyesMessage += `not more than the ${players.length} players, `
+        eyesMessage += `but only ${names.empress} remains in the ${names.center} `
+        eyesMessage += `so ${names.empress} ${names.isAddedToMarket}.`
+        state.endGame()
+      } else {
+        eyesMessage += `not more than the ${players.length} players, so ${names.timeDoesNotPass} `
+        eyesMessage += `and only ${centerCard0.rank} ${names.isAddedToMarket}.`
+      }
     }
     const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array)}.`
     const scandalEpisode = state.history.addPublicChild(eyesMessage)

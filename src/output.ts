@@ -5,7 +5,6 @@ import { Output, Game } from './external'
 import { unique } from './math'
 import { Player } from './player'
 import { State } from './state'
-import { History } from './history'
 
 export function getOutput (state: State): Output {
   const players = [...Object.values(state.players)]

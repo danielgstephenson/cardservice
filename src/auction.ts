@@ -12,18 +12,6 @@ export class Auction {
   start (): void {
     const state = this.state
     const names = state.input.names
-    const palaceCard = state.center.array[0]
-    if (palaceCard == null) {
-      throw new Error('onAllReady: palaceCard == null')
-    }
-    let publicMessage = 'The palace is not empty, so the lowest rank palace card, '
-    publicMessage += `${palaceCard.rank} ${names.isAddedToMarket}.`
-    const palaceEpisode = state.history.addPublicChild(publicMessage)
-    const oldPalaceMessage = `The palace was ${cardsToString(state.center.array)}.`
-    state.market.add(palaceCard)
-    const newPalaceMessage = `The palace becomes ${cardsToString(state.center.array)}.`
-    palaceEpisode.addPublicChild(oldPalaceMessage)
-    palaceEpisode.addPublicChild(newPalaceMessage)
     const playCards = state.getPlayedCards()
     const maxRank = Math.max(...playCards.map(card => card.rank))
     const maxRankPlayCards = playCards.filter(card => card.rank >= maxRank)

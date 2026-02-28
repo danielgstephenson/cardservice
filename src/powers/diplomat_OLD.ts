@@ -17,12 +17,12 @@ export class Diplomat extends Powers {
     //   If there is a choice:
     //      Create the choice.
     //      When the ChooseExileEvent arrives:
-    //        Reolve the choice
+    //        Resolve the choice
     //        Create a new top level episode for the choice.
     //        Carry out the second power.
     //        Attach the second power's episode to the choice episode.
 
-    // THE PHANTOM MENACE
+    // THE PHANTOM MENACE (Episode I)
     // First, you take one of your {names.trashed} {names.cards} into your hand.
     // ? Your {names.trash} is empty
     //   (second power immediatedly)
@@ -31,16 +31,16 @@ export class Diplomat extends Powers {
     // - Your hand becomes
     //    (second power immediately)
     // : NO CHILDREN
-    //    (second power delayed)
+    //    (second power delayed, do not put it here yet)
 
     // OTHER PLAYERS POWERS
 
-    // ATTACK OF THE CLONES
+    // ATTACK OF THE CLONES (Episode II)
     // You are choosing a {names.card} from your {names.trash} to take into your hand
 
     // NEW EVENT (ChooseExileEvent)
 
-    // REVENGE OF THE SITH
+    // REVENGE OF THE SITH (Episode III)
     // ? You chose to take *1* from your {names.trash} into your hand
     // : {player.name} chose a {names.card} from their {names.trash} to take into their hand
     // - SECOND POWER
@@ -64,9 +64,9 @@ export class Diplomat extends Powers {
       const newHandString = cardsToString(player.hand.array)
       const oneMessage = `Your ${names.trash} has only one card, ${card.rank}.`
       episode1.addPrivateChild(player, oneMessage)
-      const wasMessage = `Your hand was ${oldHandString}`
+      const wasMessage = `Your hand was ${oldHandString}.`
       episode1.addPrivateChild(player, wasMessage)
-      const becomeMessage = `Your hand becomes ${newHandString}`
+      const becomeMessage = `Your hand becomes ${newHandString}.`
       episode1.addPrivateChild(player, becomeMessage)
     } else {
       // Choose a card from your trash to put in your hand
