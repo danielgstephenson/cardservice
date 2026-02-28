@@ -110,7 +110,6 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
   const children = player == null ? spectateChildren : playerChildren
   const childIndices = [...children.keys()]
   const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
-  const sortSign = episode instanceof History ? 1 : -1
   groupIds.forEach(groupId => {
     if (player == null) return
     const indices = childIndices.filter(i => children[i].groupId === groupId)
@@ -118,10 +117,10 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
       const idA = children[a].playerId
       const idB = children[b].playerId
       if (idA === player.id && idB !== player.id) {
-        return 1 * sortSign
+        return -1
       }
       if (idA !== player.id && idB === player.id) {
-        return -1 * sortSign
+        return 1
       }
       return 0
     })
