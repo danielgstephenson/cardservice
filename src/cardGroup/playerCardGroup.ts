@@ -8,7 +8,9 @@ export class PlayerCardGroup extends CardGroup {
   constructor (player: Player, array?: Card[]) {
     super(array)
     this.player = player
-    this.array.forEach(card => { card.player = player })
+    this.array.forEach(card => {
+      card.player = player
+    })
   }
 
   add (card: Card): void {

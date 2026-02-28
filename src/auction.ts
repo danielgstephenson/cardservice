@@ -29,18 +29,16 @@ export class Auction {
     const maxRankPlayCards = playCards.filter(card => card.rank >= maxRank)
     if (maxRankPlayCards.length === 1) {
       const maxRankCard = maxRankPlayCards[0]
-      state.market.add(maxRankCard)
       const player = maxRankCard.player
       if (player == null) {
         throw new Error('startAuction: maxRankCard.player == null')
       }
+      state.market.add(maxRankCard)
       let privateMessage = `Your ${maxRankCard.rank} is the highest rank in play, `
       privateMessage += `so it ${names.isAddedToMarket}.`
       let publicMessage = `${player.name}'s ${maxRankCard.rank} is the highest rank in play, `
       publicMessage += `so it ${names.isAddedToMarket}.`
-      const arrestEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
-      void arrestEpisode
-      // ADD CHILDREN OF THE ARREST EPISODE
+      state.history.addYouChild(player, privateMessage, publicMessage)
     } else {
       const arrestPlayers: Player[] = []
       const playerArray = Object.values(state.players)

@@ -16,15 +16,12 @@ export function getOutput (state: State): Output {
 }
 
 function getOutputPlayer (player: Player): External.Player {
-  // const playerEpisodes = player.state.history.children.filter(episode => {
-  //   return episode.messages[player.id] != null
-  // })
   const outputHistory = getOutputEpisode(player.state.history, player).children
   return {
     id: player.id,
     name: player.name,
     gameId: player.gameId,
-    history: outputHistory, // playerEpisodes.map(episode => getOutputEpisode(episode, player)),
+    history: outputHistory,
     playReady: player.playReady,
     withdrawn: player.withdrawn,
     auctionReady: player.auctionReady,
@@ -113,14 +110,6 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
   const children = player == null ? spectateChildren : playerChildren
   const childIndices = [...children.keys()]
   const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
-  if (groupIds.length > 0) {
-    console.log(episode.messages, groupIds)
-    const indices = childIndices.filter(i => children[i].groupId === groupIds[0])
-    const sortingChildren = indices.map(i => children[i])
-    sortingChildren.forEach(child => {
-      console.log(child.messages)
-    })
-  }
   const sortSign = episode instanceof History ? 1 : -1
   groupIds.forEach(groupId => {
     if (player == null) return

@@ -12,8 +12,6 @@ export class Diplomat extends Powers {
   }
 
   power1 (card: Card, player: Player, parentEpisode: Episode): void {
-    // Add extra children for "your hand was/becomes"
-
     // The first power may trigger a choice.
     //   If there is no choice, do the second power.
     //   If there is a choice:
@@ -47,20 +45,31 @@ export class Diplomat extends Powers {
     // : {player.name} chose a {names.card} from their {names.trash} to take into their hand
     // - SECOND POWER
 
+    // Add extra children for "your hand was/becomes"
+
     const names = card.state.input.names
     let privateMessage = `First, you take one of your ${names.trashed}`
-    privateMessage += `${names.cards} into your hand.`
+    privateMessage += ` ${names.cards} into your hand.`
     let publicMessage = `First, ${player.name} takes one of`
-    publicMessage += `their ${names.trashed} ${names.cards} into their hand.`
+    publicMessage += ` their ${names.trashed} ${names.cards} into their hand.`
     const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
     if (player.trashArea.array.length === 0) {
-      const privateMessage = `Your ${names.trash} is empty`
-      const publicMessage = `${player.name}'s ${names.trash} is empty`
+      const privateMessage = `Your ${names.trash} is empty.`
+      const publicMessage = `${player.name}'s ${names.trash} is empty.`
       episode1.addYouChild(player, privateMessage, publicMessage)
     } else if (player.trashArea.array.length === 1) {
-      const privateMessage = `Your ${names.trash} has only one card, ${card.rank}`
-      const publicMessage = `${player.name}'s has only one card, ${card.rank}`
-      episode1.addYouChild(player, privateMessage, publicMessage)
+      const trashCard = player.trashArea.array[0]
+      const oldHandString = cardsToString(player.hand.array)
+      player.hand.add(trashCard)
+      const newHandString = cardsToString(player.hand.array)
+      const oneMessage = `Your ${names.trash} has only one card, ${card.rank}.`
+      episode1.addPrivateChild(player, oneMessage)
+      const wasMessage = `Your hand was ${oldHandString}`
+      episode1.addPrivateChild(player, wasMessage)
+      const becomeMessage = `Your hand becomes ${newHandString}`
+      episode1.addPrivateChild(player, becomeMessage)
+    } else {
+      // Choose a card from your trash to put in your hand
     }
   }
 

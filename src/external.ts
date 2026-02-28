@@ -1,3 +1,5 @@
+// Input types
+
 export interface Input {
   gameId: string
   seed: string
@@ -30,6 +32,8 @@ export interface Input {
     trashed: string
   }
 }
+
+export type Color = 'Green' | 'Red' | 'Yellow'
 
 export interface CardDetails {
   ranks: number[]
@@ -111,6 +115,13 @@ export type InputEvent =
   ConcedeEvent |
   TakeEvent
 
+export interface Card {
+  id: string
+  rank: number
+}
+
+// Output types
+
 export interface Episode {
   message: string
   children: Episode[]
@@ -120,11 +131,6 @@ export interface Episode {
   firstInRound: boolean
   playerId?: string
   groupId?: string
-}
-
-export interface Card {
-  id: string
-  rank: number
 }
 
 export interface PrivateTrashCard {
@@ -181,7 +187,6 @@ export interface PendingChoice {
   copyingCard: Card | null
 }
 
-export type Color = 'Green' | 'Red' | 'Yellow'
 export type Phase = 'play' | 'auction'
 export interface Game {
   startTime: number
@@ -201,5 +206,7 @@ export interface Output {
   players: Player[]
   game: Game
 }
+
+// Service type
 
 export type Service = (input: Input) => Output
