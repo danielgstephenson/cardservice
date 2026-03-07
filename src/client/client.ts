@@ -11,57 +11,57 @@ input1.events = events1
 
 console.log('Input 1...')
 const output1 = service(input1)
-// printEpisodes({
-//   start: 0,
-//   output: output1,
-//   playerId: 'p3'
-// })
-
-const output1p1 = getPlayer(output1, 'p1')
-const output1p2 = getPlayer(output1, 'p2')
-const output1p3 = getPlayer(output1, 'p3')
-const output1p4 = getPlayer(output1, 'p4')
-const output1p5 = getPlayer(output1, 'p5')
-
-const input2 = structuredClone(sharedInput)
-input2.events.push(
-  {
-    type: 'plan',
-    playCard: output1p1.hand[1],
-    trashCard: output1p1.hand[0],
-    playerId: 'p1'
-  }, {
-    type: 'plan',
-    playCard: output1p2.hand[1],
-    trashCard: output1p2.hand[0],
-    playerId: 'p2'
-  }, {
-    type: 'plan',
-    playCard: output1p3.hand[3],
-    trashCard: output1p3.hand[1],
-    playerId: 'p3'
-  }, {
-    type: 'plan',
-    playCard: output1p4.hand[1],
-    trashCard: output1p4.hand[0],
-    playerId: 'p4'
-  }, {
-    type: 'plan',
-    playCard: output1p5.hand[1],
-    trashCard: output1p5.hand[0],
-    playerId: 'p5'
-  }
-)
-
-console.log('Input 2...')
-const output2 = service(input2)
 printEpisodes({
   start: 0,
-  output: output2,
+  output: output1,
   playerId: 'p3'
 })
-const json2 = JSON.stringify(output2, null, 2)
-fs.writeFileSync('output.json', json2)
+
+// const output1p1 = getPlayer(output1, 'p1')
+// const output1p2 = getPlayer(output1, 'p2')
+// const output1p3 = getPlayer(output1, 'p3')
+// const output1p4 = getPlayer(output1, 'p4')
+// const output1p5 = getPlayer(output1, 'p5')
+
+// const input2 = structuredClone(sharedInput)
+// input2.events.push(
+//   {
+//     type: 'plan',
+//     playCard: output1p1.hand[1],
+//     trashCard: output1p1.hand[0],
+//     playerId: 'p1'
+//   }, {
+//     type: 'plan',
+//     playCard: output1p2.hand[1],
+//     trashCard: output1p2.hand[0],
+//     playerId: 'p2'
+//   }, {
+//     type: 'plan',
+//     playCard: output1p3.hand[3],
+//     trashCard: output1p3.hand[1],
+//     playerId: 'p3'
+//   }, {
+//     type: 'plan',
+//     playCard: output1p4.hand[1],
+//     trashCard: output1p4.hand[0],
+//     playerId: 'p4'
+//   }, {
+//     type: 'plan',
+//     playCard: output1p5.hand[1],
+//     trashCard: output1p5.hand[0],
+//     playerId: 'p5'
+//   }
+// )
+
+// console.log('Input 2...')
+// const output2 = service(input2)
+// printEpisodes({
+//   start: 0,
+//   output: output2,
+//   playerId: 'p3'
+// })
+// const json2 = JSON.stringify(output2, null, 2)
+// fs.writeFileSync('output.json', json2)
 
 // const input3 = structuredClone(input2)
 // input3.events.push(
