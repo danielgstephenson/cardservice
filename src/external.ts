@@ -37,7 +37,7 @@ export interface Input {
   }
 }
 
-export type Color = 'Green' | 'Red' | 'Yellow'
+export type Color = 'Blue' | 'Red' | 'Yellow'
 
 export interface CardDetails {
   ranks: number[]

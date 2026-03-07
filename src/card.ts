@@ -34,7 +34,7 @@ export class Card {
   }
 
   addPowers (): void {
-    if (this.rank === 3) this.powers = new Pirate()
+    if (this.rank === 4) this.powers = new Pirate()
     if (this.rank === 7) this.powers = new Princess()
   }
 

@@ -154,8 +154,8 @@ export class Player {
       earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
-      const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney} ${names.major}.`
-      const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney} ${names.major}.`
+      const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney} ${names.minor}.`
+      const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney} ${names.minor}.`
       earnEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }

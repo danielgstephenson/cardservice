@@ -22,16 +22,34 @@ export class Princess extends Powers {
     */
     // WORK FROM HERE
     const names = card.state.input.names
-    let privateMessage = `First, if the ${names.highestRank} ${names.card} ${names.inPlay} is red or yellow, `
-    let publicMessage = privateMessage
-    privateMessage += `earn 10 ${names.major}.`
-    publicMessage += `${player.name} earns 10 ${names.major}.`
+    const center = player.state.center
+    const privateMessage = `First, if the two leftmost ${names.center} ${names.cards} are the same color, earn the higher rank.`
+    const publicMessage = `First, if the two leftmost ${names.center} ${names.cards} are the same color, ${player.name} earns the higher rank.`
     const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
-    // Identify the highest rank card
-    const colorMessage = `The highest rank ${names.card}, ${card.rank}, is ${card.color.toLowerCase()}.`
-    episode1.addPublicChild(colorMessage)
-    if (['Red', 'Yellow'].includes(card.color)) {
-      player.earn(10, episode1)
+    if (center.array.length === 0) {
+      const childMessage = `Only the ${names.empress} remains in the ${names.center}.`
+      episode1.addPublicChild(childMessage)
+      return
+    }
+    const card0 = center.array[0]
+    if (center.array.length === 1) {
+      let childMessage = `Only the leftmost ${names.center} card, ${card0.rank}, `
+      childMessage += `and the ${names.empress} remain in the ${names.center}, and the ${names.empress} has no color.`
+      episode1.addPublicChild(childMessage)
+      return
+    }
+    const card1 = center.array[1]
+    if (card0.color !== card1.color) {
+      let childMessage = `The leftmost ${names.center} card, ${card0.rank}, is ${card0.color}, `
+      childMessage += `but the next leftmost ${names.center} card, ${card1.rank}, is ${card1.color}.`
+      episode1.addPublicChild(childMessage)
+      return
+    }
+    if (card0.color === card1.color) {
+      let childMessage = `The two leftmost ${names.center} cards, ${card0.rank} and ${card1.rank}, `
+      childMessage += `are both ${card0.color}, so you earn ${card1.rank}.`
+      const childEpisode = episode1.addPublicChild(childMessage)
+      player.earn(card1.rank, childEpisode)
     }
   }
 

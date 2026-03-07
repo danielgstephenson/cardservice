@@ -3,7 +3,7 @@ import { InputEvent } from '../external'
 import getPlayer from './getPlayer'
 import printEpisodes from './printEpisodes'
 import sharedInput from './sharedInput'
-// import fs from 'fs'
+import fs from 'fs'
 
 const input1 = structuredClone(sharedInput)
 const events1: InputEvent[] = []
@@ -50,6 +50,8 @@ input2.events.push(
 
 console.log('Input 2...')
 const output2 = service(input2)
+const json2 = JSON.stringify(output2, null, 2)
+fs.writeFileSync('output.json', json2)
 
 // const input3 = structuredClone(input2)
 // input3.events.push(

@@ -67,13 +67,13 @@ function getCardsInGame (state: State): Card[] {
 
 function getPortfolio (state: State, cardsInGame: Card[]): Card[] {
   if (state.startingEpisode == null) throw new Error('startEpisode is null')
-  const greenCards = cardsInGame.filter(card => card.color === 'Green')
-  const greenCardsMessage = `The remaining green ${state.input.names.cards} are ${cardsToString(greenCards)}.`
-  state.startingEpisode.addPublicChild(greenCardsMessage)
-  const archiveCard = greenCards.shift()
+  const blueCards = cardsInGame.filter(card => card.color === 'Blue')
+  const blueCardsMessage = `The remaining blue ${state.input.names.cards} are ${cardsToString(blueCards)}.`
+  state.startingEpisode.addPublicChild(blueCardsMessage)
+  const archiveCard = blueCards.shift()
   if (archiveCard == null) throw new Error('archiveCard is null')
   state.startingArchive = [archiveCard]
-  let archiveCardMessage = `The lowest remaining green ${state.input.names.card}, ${archiveCard.rank},`
+  let archiveCardMessage = `The lowest remaining blue ${state.input.names.card}, ${archiveCard.rank},`
   archiveCardMessage += ` is ${state.input.names.archivedTo} the ${state.input.names.archive}.`
   state.startingEpisode.addPublicChild(archiveCardMessage)
   const redCards = cardsInGame.filter(card => card.color === 'Red')
@@ -82,10 +82,10 @@ function getPortfolio (state: State, cardsInGame: Card[]): Card[] {
   const yellowCards = cardsInGame.filter(card => card.color === 'Yellow')
   const yellowCardsMessage = `The remaining yellow ${state.input.names.cards} are ${cardsToString(yellowCards)}.`
   state.startingEpisode.addPublicChild(yellowCardsMessage)
-  const portfolioGreen = getPortfolioColorCards(state, 'Green', greenCards)
+  const portfolioBlue = getPortfolioColorCards(state, 'Blue', blueCards)
   const portfolioRed = getPortfolioColorCards(state, 'Red', redCards)
   const portfolioYellow = getPortfolioColorCards(state, 'Yellow', yellowCards)
-  const portfolio = [new Card(5, state), new Card(8, state), ...portfolioGreen, ...portfolioRed, ...portfolioYellow]
+  const portfolio = [new Card(5, state), new Card(8, state), ...portfolioBlue, ...portfolioRed, ...portfolioYellow]
   const sortedPortfolio = Card.sortByRank(portfolio)
   const sortedPortfolioString = cardsToString(sortedPortfolio)
   const portfolioMessage = `The portfolio is ${sortedPortfolioString}.`
@@ -96,10 +96,10 @@ function getPortfolio (state: State, cardsInGame: Card[]): Card[] {
 function getPortfolioColorCards (state: State, color: Color, colorCards: Card[]): Card[] {
   if (state.startingEpisode == null) throw new Error('startEpisode is null')
   const portfolioCounts = {
-    2: { Green: 1, Red: 4, Yellow: 3 },
-    3: { Green: 1, Red: 4, Yellow: 3 },
-    4: { Green: 1, Red: 4, Yellow: 3 },
-    5: { Green: 1, Red: 4, Yellow: 3 }
+    2: { Blue: 1, Red: 4, Yellow: 3 },
+    3: { Blue: 1, Red: 4, Yellow: 3 },
+    4: { Blue: 1, Red: 4, Yellow: 3 },
+    5: { Blue: 1, Red: 4, Yellow: 3 }
   }
   const portfolioCount = portfolioCounts[state.input.playerCount]
   const portfolioColorCards = colorCards.slice(0, portfolioCount[color])
