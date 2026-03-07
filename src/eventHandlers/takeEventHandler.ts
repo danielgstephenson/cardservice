@@ -28,7 +28,6 @@ export class TakeEventHandler {
     if (winner == null) {
       throw new Error('handleTakeEvent: winner is undefined.')
     }
-    console.log('ids:', event.playerId, winner.id)
     if (event.playerId !== winner.id) {
       throw new Error('handleTakeEvent: event.userId !== winner.userId')
     }
@@ -38,14 +37,15 @@ export class TakeEventHandler {
         throw new Error(`handleTakeEvent: ${cardId} is not in the market.`)
       }
     })
-    const cards = event.cardIds.map(cardId => state.getCard(cardId))
-    const stringCards = cardsToString(cards)
+    const takenCards = event.cardIds.map(cardId => state.getCard(cardId))
+    takenCards.sort((a, b) => a.rank - b.rank)
+    const stringCards = cardsToString(takenCards)
     const names = state.input.names
     const takePrivateMessage = `You took ${stringCards} from the ${names.center}.`
     const player = state.players[event.playerId]
     const takePublicMessage = `${player.name} took ${stringCards} from the ${names.center}.`
     state.history.addYouChild(player, takePrivateMessage, takePublicMessage)
-    const leftOverCards = this.state.market.array
+    const leftOverCards = this.state.market.array.filter(card => !takenCards.includes(card))
     if (leftOverCards.length > 0) {
       const leftOverString = cardsToString(leftOverCards)
       const oldArchiveString = cardsToString(state.archive.array)
@@ -74,9 +74,9 @@ export class TakeEventHandler {
     const playCards = player.playArea.array
     const winner = player.id === event.playerId
     const auctionCards = winner ? event.cardIds.map(id => state.cards[id]) : []
-    const newCards = [...playCards, ...auctionCards]
-    newCards.sort((a, b) => a.rank - b.rank)
-    newCards.forEach(card => player.deck.add(card))
+    auctionCards.sort((a, b) => a.rank - b.rank)
+    const newCards = [...auctionCards, ...playCards]
+    player.deck.addCards(newCards)
     const newDeckString = cardsToString(player.deck.array)
     if (newCards.length === 0) {
       const privateMessage = `Your ${names.deck} remains ${newDeckString}.`
@@ -92,14 +92,7 @@ export class TakeEventHandler {
     const privateOldMessage = `Your ${names.deck} was ${oldDeckString}`
     const publicOldMessage = `${player.name}'s ${names.deck} was ${oldDeckString}.`
     discardEpisode.addYouChild(player, privateOldMessage, publicOldMessage, player.id)
-    const arrested = playCards.length === 0
-    if (!winner && !arrested) {
-      const rank = playCards[0].rank
-      const privateMessage = `The ${rank} you played is added to your deck.`
-      const publicMessage = `The ${rank} ${player.name} played is added to their deck.`
-      discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
-    }
-    if (winner && arrested) {
+    if (winner) {
       const boughtRanks = cardsToString(auctionCards)
       const onlyOne = boughtRanks.length === 1
       const orderString = onlyOne ? '' : ' from lowest to highest'
@@ -110,9 +103,12 @@ export class TakeEventHandler {
       publicMessage += ` their ${names.deck}${orderString}.`
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
-    // ADD: Winner and Not Arrested Case (NOT UNTIL TESTING IS POSSIBLE)
-    //   The ${card.rank} you played and the ${cardsToString()}
-    //   you bought is/are added to your deck
-    //   from lowest to highest
+    const arrested = playCards.length === 0
+    if (!arrested) {
+      const rank = playCards[0].rank
+      const privateMessage = `The ${rank} you played is added to your deck.`
+      const publicMessage = `The ${rank} ${player.name} played is added to their deck.`
+      discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
+    }
   }
 }

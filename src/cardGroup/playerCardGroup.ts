@@ -13,8 +13,8 @@ export class PlayerCardGroup extends CardGroup {
     })
   }
 
-  add (card: Card): void {
-    super.add(card)
+  add (card: Card, prepend = false): void {
+    super.add(card, prepend)
     card.player = this.player
   }
 

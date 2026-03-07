@@ -35,7 +35,7 @@ export class Pirate extends Powers {
     const publicOldDeck = `${player.name}'s ${names.deck} was ${cardsToString(player.deck.array)}.`
     episode2.addYouChild(player, privateOldDeck, publicOldDeck)
     const newCard = new Card(1, card.state)
-    player.deck.array.unshift(newCard)
+    player.deck.add(newCard, true)
     const privateNewDeck = `Your ${names.deck} becomes ${cardsToString(player.deck.array)}.`
     const publicNewDeck = `${player.name}'s ${names.deck} becomes ${cardsToString(player.deck.array)}.`
     episode2.addYouChild(player, privateNewDeck, publicNewDeck)

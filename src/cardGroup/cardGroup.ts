@@ -9,12 +9,17 @@ export class CardGroup {
     this.array.forEach(card => { card.group = this })
   }
 
-  add (card: Card): void {
+  add (card: Card, prepend = false): void {
     if (card.group != null) {
       card.group.remove(card)
     }
-    this.array.push(card)
+    if (prepend) this.array.unshift(card)
+    else this.array.push(card)
     card.group = this
+  }
+
+  addCards (cards: Card[]): void {
+    cards.forEach(card => this.add(card))
   }
 
   remove (card: Card): void {

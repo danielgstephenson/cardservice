@@ -69,11 +69,13 @@ export class Player {
     const names = this.state.input.names
     const deckDrawCount = Math.min(drawCount, this.deck.array.length)
     const deckDrawCards: Card[] = []
+    const oldDeckString = cardsToString(this.deck.array)
     range(deckDrawCount).forEach(_ => {
       const card = this.deck.array[0]
       this.hand.add(card)
       deckDrawCards.push(card)
     })
+    const newDeckString = cardsToString(this.deck.array)
     if (drawCount > this.deck.array.length && drawPawns === true) {
       const pawnCount = drawCount - this.deck.array.length
       const pawns = range(pawnCount).map(_ => new Card(1, this.state))
@@ -96,6 +98,7 @@ export class Player {
       let publicMessage = `${this.name} draws ${deckDrawString} ${names.cards} from their ${names.deck} `
       publicMessage += `and takes ${pawnCount} pawns from the bank.`
       parentEpisode.addYouChild(this, privateMessage, publicMessage)
+      // Your deck was
     } else if (drawCount > deckDrawCount) {
       const deckSize = this.deck.array.length
       const deckString = cardsToString(this.deck.array)
@@ -105,11 +108,20 @@ export class Player {
       let publicMessage = `${this.name}'s ${names.deck} only has ${deckSize}, ${deckString}, `
       publicMessage += `so they draw ${them}.`
       parentEpisode.addYouChild(this, privateMessage, publicMessage)
-    } else {
+      // Your deck was
+    } else if (this.deck.array.length >= drawCount) {
       const deckDrawString = cardsToString(deckDrawCards)
       const privateMessage = `You draw ${drawCount} from your ${names.deck}, ${deckDrawString}.`
       const publicMessage = `${this.name} draws ${drawCount} from their ${names.deck}, ${deckDrawString}.`
       parentEpisode.addYouChild(this, privateMessage, publicMessage)
+      // Your deck was
+      const privateWasMessage = `Your ${names.deck} was ${oldDeckString}.`
+      const publicWasMessage = `${this.name}'s ${names.deck} was ${oldDeckString}.`
+      parentEpisode.addYouChild(this, privateWasMessage, publicWasMessage)
+
+      const privateBecomesMessage = `Your ${names.deck} becomes ${newDeckString}.`
+      const publicBecomesMessage = `${this.name}'s ${names.deck} becomes ${newDeckString}.`
+      parentEpisode.addYouChild(this, privateBecomesMessage, publicBecomesMessage)
     }
   }
 

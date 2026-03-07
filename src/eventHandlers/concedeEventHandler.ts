@@ -41,7 +41,9 @@ export class ConcedeEventHandler {
       throw new Error(`processConcedeEvent: player ${player.id} has the highest untied bid.`)
     }
     player.auctionReady = true
-    state.history.addPublicChild(`${player.name} is ready to concede the auction.`)
+    const publicConcedeMessage = `${player.name} is ready to concede the auction.`
+    const privateConcedeMessage = 'You are ready to concede the auction.'
+    state.history.addYouChild(player, privateConcedeMessage, publicConcedeMessage)
     const highestUntiedBid = Math.max(...untiedBids)
     const winner = playerArray.find(p => p.bid === highestUntiedBid)
     if (winner == null) {

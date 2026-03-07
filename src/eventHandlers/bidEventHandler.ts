@@ -38,7 +38,9 @@ export class BidEventHandler {
     const playerArray = Object.values(state.players)
     playerArray.forEach(p => { p.auctionReady = false })
     const bid = toWords(event.bid)
-    state.history.addPublicChild(`${player.name} bids ${bid}.`)
+    const publicMessage = `${player.name} bids ${bid}.`
+    const privateMessage = `You bid ${bid}.`
+    state.history.addYouChild(player, privateMessage, publicMessage)
     player.bid = event.bid
   }
 }
