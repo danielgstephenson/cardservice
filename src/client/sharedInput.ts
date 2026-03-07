@@ -2,7 +2,7 @@ import { Input } from '../external'
 
 const sharedInput: Input = {
   gameId: 'g1',
-  seed: 's2',
+  seed: 's1',
   startingPlayerId: 'p1',
   cardDetails: {
     ranks: [

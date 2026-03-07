@@ -11,6 +11,11 @@ input1.events = events1
 
 console.log('Input 1...')
 const output1 = service(input1)
+// printEpisodes({
+//   start: 0,
+//   output: output1,
+//   playerId: 'p3'
+// })
 
 const output1p1 = getPlayer(output1, 'p1')
 const output1p2 = getPlayer(output1, 'p2')
@@ -22,13 +27,13 @@ const input2 = structuredClone(sharedInput)
 input2.events.push(
   {
     type: 'plan',
-    playCard: output1p1.hand[0],
-    trashCard: output1p1.hand[1],
+    playCard: output1p1.hand[1],
+    trashCard: output1p1.hand[0],
     playerId: 'p1'
   }, {
     type: 'plan',
-    playCard: output1p2.hand[0],
-    trashCard: output1p2.hand[1],
+    playCard: output1p2.hand[1],
+    trashCard: output1p2.hand[0],
     playerId: 'p2'
   }, {
     type: 'plan',
@@ -37,19 +42,24 @@ input2.events.push(
     playerId: 'p3'
   }, {
     type: 'plan',
-    playCard: output1p4.hand[0],
-    trashCard: output1p4.hand[1],
+    playCard: output1p4.hand[1],
+    trashCard: output1p4.hand[0],
     playerId: 'p4'
   }, {
     type: 'plan',
-    playCard: output1p5.hand[0],
-    trashCard: output1p5.hand[1],
+    playCard: output1p5.hand[1],
+    trashCard: output1p5.hand[0],
     playerId: 'p5'
   }
 )
 
 console.log('Input 2...')
 const output2 = service(input2)
+printEpisodes({
+  start: 0,
+  output: output2,
+  playerId: 'p3'
+})
 const json2 = JSON.stringify(output2, null, 2)
 fs.writeFileSync('output.json', json2)
 
@@ -125,12 +135,6 @@ fs.writeFileSync('output.json', json2)
 
 // const json = JSON.stringify(output5)
 // fs.writeFileSync('output.json', json)
-
-printEpisodes({
-  start: 0,
-  output: output2,
-  playerId: 'p3'
-})
 
 // const { history, ...game } = output4.game
 // const players = output4.players.map(player => {
