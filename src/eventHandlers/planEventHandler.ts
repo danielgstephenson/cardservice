@@ -32,6 +32,7 @@ export class PlanEventHandler {
     const planEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}.`
     planEpisode.addPrivateChild(player, oldHandMessage)
+    planEpisode.addPrivateChild(player, `You played ${event.playCard.rank}.`)
     const trashCard = state.getCard(event.trashCard.id)
     player.trash(trashCard, true)
     const playCard = state.getCard(event.playCard.id)

@@ -70,6 +70,7 @@ export class Player {
     const deckDrawCount = Math.min(drawCount, this.deck.array.length)
     const deckDrawCards: Card[] = []
     const oldDeckString = cardsToString(this.deck.array)
+    const deckEmpty = this.deck.array.length === 0
     range(deckDrawCount).forEach(_ => {
       const card = this.deck.array[0]
       this.hand.add(card)
@@ -81,7 +82,6 @@ export class Player {
       const pawns = range(pawnCount).map(_ => new Card(1, this.state))
       pawns.forEach(pawn => this.hand.add(pawn))
     }
-    const deckEmpty = this.deck.array.length === 0
     if (deckEmpty && drawPawns === true) {
       const privateMessage = `Your deck is empty, so you take ${drawCount} pawns from the bank.`
       const publicMessage = `${this.name}'s deck is empty, so they take ${drawCount} pawns from the bank.`
