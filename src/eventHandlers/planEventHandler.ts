@@ -14,6 +14,9 @@ export class PlanEventHandler {
     if (state.phase !== 'play') {
       throw new Error('handlePlanEvent: this.phase !== "play"')
     }
+    if (event.playCard.id === event.trashCard.id) {
+      throw new Error('handlePlanEvent: event.playCard.id === event.trashCard.id')
+    }
     const player = state.players[event.playerId]
     if (player == null) {
       throw new Error(`handlePlanEvent: missing player ${event.playerId}`)
@@ -32,9 +35,9 @@ export class PlanEventHandler {
     const planEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}.`
     planEpisode.addPrivateChild(player, oldHandMessage)
-    planEpisode.addPrivateChild(player, `You played ${event.playCard.rank}.`)
+    planEpisode.addPrivateChild(player, `You play ${event.playCard.rank}.`)
     const trashCard = state.getCard(event.trashCard.id)
-    player.trash(trashCard, true)
+    player.trash(trashCard, planEpisode)
     const playCard = state.getCard(event.playCard.id)
     player.playArea.add(playCard)
     const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}.`
@@ -49,13 +52,7 @@ export class PlanEventHandler {
 
   onAllReady (): void {
     const state = this.state
-    const playerArray = Object.values(state.players)
     state.history.addPublicChild('Everyone is ready.')
-    playerArray.forEach(player => {
-      const trashCard = player.trashArea.array[0]
-      if (trashCard == null) throw new Error('onAllReady: trashCard == null')
-      player.addTrashEpisode(trashCard)
-    })
     state.playCards()
     this.scandal()
     if (state.phase === 'end') return

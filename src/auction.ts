@@ -44,7 +44,7 @@ export class Auction {
       const arrestEpisode = state.history.addChild()
       otherPlayers.forEach(player => {
         let message = `${playersToString(arrestPlayers)} played the highest rank, ${maxRank}, `
-        message += `so they are ${names.archivedTo} the ${names.archive}.`
+        message += `so their cards are ${names.archivedTo} the ${names.archive}.`
         arrestEpisode.messages[player.id] = message
       })
       arrestPlayers.forEach(player => {
@@ -63,7 +63,7 @@ export class Auction {
     // Announce Bonus Powers
     const auctionCards = cardsToString(state.market.array)
     let startAuctionMessage = `${auctionCards} ${isAre(state.archive.array)} up for `
-    startAuctionMessage += `auction from the ${names.market}.`
+    startAuctionMessage += `auction in the ${names.market}.`
     state.history.addPublicChild(startAuctionMessage)
     state.phase = 'auction'
   }

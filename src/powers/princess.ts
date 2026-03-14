@@ -12,15 +12,6 @@ export class Princess extends Powers {
   }
 
   power1 (card: Card, player: Player, parentEpisode: Episode): void {
-    /*
-    First, if the two leftmost ${names.center} ${cards.cards} are the same color, earn the higher rank.
-      A: Only the ${names.empress} remains in the ${names.center}.
-      B: Only the leftmost ${names.center} card, ${card.rank}, and the ${names.empress} remain in the ${names.center}, and the ${names.empress} has no color.
-      C: The leftmost ${names.center} card, ${card.rank}, is ${card.color}, but the next leftmost ${names.center} card, ${nextCard.rank}, is {nextCard.color}.
-      D: The two leftmost ${names.center} cards, ${card.rank} and ${nextCard.rank}, are both ${card.color}, so you earn ${nextCard.rank}.
-        - (earn messages) use player.earn()
-    */
-    // WORK FROM HERE
     const names = card.state.input.names
     const center = player.state.center
     const privateMessage = `First, if the two leftmost ${names.center} ${names.cards} are the same color, earn the higher rank.`
@@ -46,9 +37,11 @@ export class Princess extends Powers {
       return
     }
     if (card0.color === card1.color) {
-      let childMessage = `The two leftmost ${names.center} cards, ${card0.rank} and ${card1.rank}, `
-      childMessage += `are both ${card0.color}, so you earn ${card1.rank}.`
-      const childEpisode = episode1.addPublicChild(childMessage)
+      let privateChildMessage = `The two leftmost ${names.center} cards, ${card0.rank} and ${card1.rank}, `
+      let publicChildMessage = privateChildMessage
+      privateChildMessage += `are both ${card0.color}, so you earn ${card1.rank}.`
+      publicChildMessage += `are both ${card0.color}, so ${player.name} earns ${card1.rank}.`
+      const childEpisode = episode1.addYouChild(player, privateChildMessage, publicChildMessage)
       player.earn(card1.rank, childEpisode)
     }
   }

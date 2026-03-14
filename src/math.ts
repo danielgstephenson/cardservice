@@ -17,3 +17,20 @@ export function shuffle <T> (array: T[], rand: Rand): T[] {
 export function unique <T> (array: T[]): T[] {
   return [...new Set(array)]
 }
+
+export function whichMax (array: number[]): number {
+  let indexMax = 0
+  let valueMax = array[0]
+  array.forEach((value, index) => {
+    if (value > valueMax) {
+      indexMax = index
+      valueMax = value
+    }
+  })
+  return indexMax
+}
+
+export function whichMin (array: number[]): number {
+  const negArray = array.map(x => -x)
+  return whichMax(negArray)
+}

@@ -1,5 +1,6 @@
 import { Card } from '../card'
 import { Episode } from '../episode'
+import { whichMax } from '../math'
 import { Player } from '../player'
 import { cardsToString } from '../translate'
 import { Powers } from './powers'
@@ -18,8 +19,11 @@ export class Pirate extends Powers {
     privateMessage += `earn 10 ${names.major}.`
     publicMessage += `${player.name} earns 10 ${names.major}.`
     const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
-    // Identify the highest rank card
-    const colorMessage = `The highest rank ${names.card}, ${card.rank}, is ${card.color.toLowerCase()}.`
+    const players = Object.values(player.state.players)
+    const playedCards = players.map(p => p.playArea.array[0])
+    const playedRanks = playedCards.map(card => card.rank)
+    const highestRankCard = playedCards[whichMax(playedRanks)]
+    const colorMessage = `The highest rank ${names.card}, ${highestRankCard.rank}, is ${highestRankCard.color.toLowerCase()}.`
     episode1.addPublicChild(colorMessage)
     if (['Red', 'Yellow'].includes(card.color)) {
       player.earn(10, episode1)

@@ -138,7 +138,7 @@ input5.events.push(
     type: 'plan',
     playCard: output4p3.hand[0],
     playerId: 'p3',
-    trashCard: output4p3.hand[0]
+    trashCard: output4p3.hand[1]
   },
   {
     type: 'plan',
@@ -153,11 +153,54 @@ input5.events.push(
     trashCard: output4p5.hand[0]
   }
 )
-const output5 = service(input5)
+// const output5 = service(input5)
+// printEpisodes({
+//   start: 0,
+//   output: output5,
+//   playerId: 'p3'
+// })
+// const json5 = JSON.stringify(output5, null, 2)
+// fs.writeFileSync('output.json', json5)
+
+const input6 = structuredClone(input5)
+input6.events.push(
+  {
+    type: 'bid',
+    bid: 5,
+    playerId: 'p1'
+  },
+  {
+    type: 'bid',
+    bid: 10,
+    playerId: 'p2'
+  },
+  {
+    type: 'bid',
+    bid: 10,
+    playerId: 'p3'
+  },
+  {
+    type: 'concede',
+    playerId: 'p2'
+  },
+  {
+    type: 'concede',
+    playerId: 'p3'
+  },
+  {
+    type: 'concede',
+    playerId: 'p4'
+  },
+  {
+    type: 'concede',
+    playerId: 'p5'
+  }
+)
+const output6 = service(input6)
 printEpisodes({
   start: 0,
-  output: output5,
+  output: output6,
   playerId: 'p3'
 })
-const json5 = JSON.stringify(output5, null, 2)
-fs.writeFileSync('output.json', json5)
+const json6 = JSON.stringify(output6, null, 2)
+fs.writeFileSync('output.json', json6)
