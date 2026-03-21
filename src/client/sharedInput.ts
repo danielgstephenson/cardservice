@@ -199,6 +199,7 @@ const sharedInput: Input = {
     major: 'gold',
     market: 'trial',
     minor: 'silver',
+    played: 'played',
     timeDoesNotPass: 'there is only a minor scandal',
     timeDoesPass: 'there is a major scandal',
     trash: 'exile',

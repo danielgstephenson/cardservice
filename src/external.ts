@@ -30,6 +30,7 @@ export interface Input {
     major: string
     market: string
     minor: string
+    played: string
     timeDoesNotPass: string
     timeDoesPass: string
     trash: string

@@ -55,10 +55,16 @@ export class ConcedeEventHandler {
     const losers = playerArray.filter(p => p.id !== winner.id)
     const readyToEndAuction = losers.every(p => p.auctionReady)
     if (!readyToEndAuction) return
-    let privateMessage = 'Everyone is ready, so '
-    privateMessage += `you pay ${highestUntiedBid}.`
-    let publicMessage = 'Everyone is ready, so '
-    publicMessage += `${winner.name} pays ${highestUntiedBid}.`
+    const maximalBid = Math.max(...bids)
+    let privateMessage = 'Everyone is ready, '
+    let publicMessage = 'Everyone is ready, '
+    if (highestUntiedBid === maximalBid) {
+      privateMessage += `so you pay ${highestUntiedBid}.`
+      publicMessage += `so ${winner.name} pays ${highestUntiedBid}.`
+    } else {
+      privateMessage += `so you pay ${highestUntiedBid} because you have the highest untied bid.`
+      publicMessage += `so ${winner.name} pays ${highestUntiedBid} because they have the highest untied bid.`
+    }
     const allReadyEpisode = state.history.addYouChild(winner, privateMessage, publicMessage)
     winner.pay(highestUntiedBid, allReadyEpisode)
   }

@@ -39,11 +39,11 @@ export class TakeEventHandler {
     })
     const takenCards = event.cardIds.map(cardId => state.getCard(cardId))
     takenCards.sort((a, b) => a.rank - b.rank)
-    const stringCards = cardsToString(takenCards)
+    const stringCards = takenCards.length === 0 ? 'nothing' : cardsToString(takenCards)
     const names = state.input.names
-    const takePrivateMessage = `You took ${stringCards} from the ${names.center}.`
+    const takePrivateMessage = `You took ${stringCards} from the ${names.market}.`
     const player = state.players[event.playerId]
-    const takePublicMessage = `${player.name} took ${stringCards} from the ${names.center}.`
+    const takePublicMessage = `${player.name} took ${stringCards} from the ${names.market}.`
     state.history.addYouChild(player, takePrivateMessage, takePublicMessage)
     const leftOverCards = this.state.market.array.filter(card => !takenCards.includes(card))
     if (leftOverCards.length > 0) {
@@ -106,8 +106,8 @@ export class TakeEventHandler {
     const arrested = playCards.length === 0
     if (!arrested) {
       const rank = playCards[0].rank
-      const privateMessage = `The ${rank} you played is added to your deck.`
-      const publicMessage = `The ${rank} ${player.name} played is added to their deck.`
+      const privateMessage = `The ${rank} you ${names.played} is added to your deck.`
+      const publicMessage = `The ${rank} ${player.name} ${names.played} is added to their deck.`
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
   }

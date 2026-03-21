@@ -5,6 +5,7 @@ import { Powers } from './powers/powers'
 import { Pirate } from './powers/pirate'
 import { State } from './state'
 import { Princess } from './powers/princess'
+import { Duelist } from './powers/duelist'
 
 export class Card {
   state: State
@@ -36,6 +37,7 @@ export class Card {
   addPowers (): void {
     if (this.rank === 4) this.powers = new Pirate()
     if (this.rank === 7) this.powers = new Princess()
+    if (this.rank === 9) this.powers = new Duelist()
   }
 
   static sortByRank (cards: Card[]): Card[] {

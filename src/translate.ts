@@ -18,9 +18,10 @@ export function arrayToString (input: number[] | string[]): string {
   return `${firstString}, and ${lastElement}`
 }
 
-export function cardsToString (cards: Card[]): string {
-  const ranks = cards.map(card => card.rank)
-  return arrayToString(ranks)
+export function cardsToString (cards: Card[], extras: string[] = []): string {
+  const ranks = cards.map(card => card.rank.toFixed(0))
+  const names = [...ranks, ...extras]
+  return arrayToString(names)
 }
 
 export function playersToString (players: Player[]): string {

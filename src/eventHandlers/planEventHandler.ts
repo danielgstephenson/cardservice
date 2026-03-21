@@ -67,6 +67,7 @@ export class PlanEventHandler {
     const names = state.input.names
     let eyesMessage = `There are ${totalCharge} total ${names.charges}, `
     const oldCenterMessage = `The ${names.center} was ${cardsToString(state.center.array)}.`
+    const oldMarketMessage = `The ${names.market} was ${cardsToString(state.market.array)}.`
     if (totalCharge > players.length) {
       const centerCard0 = state.center.array[0]
       const centerCard1 = state.center.array[1]
@@ -99,13 +100,14 @@ export class PlanEventHandler {
       }
     }
     const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array)}.`
+    const newMarketMessage = `The ${names.market} becomes ${cardsToString(state.market.array)}.`
     const scandalEpisode = state.history.addPublicChild(eyesMessage)
     const groupId = crypto.randomUUID()
     players.forEach(player => {
       const card = player.playArea.array[0]
       if (card == null) throw new Error('scandal: playCard == null')
-      const privateMessage = `You played ${card.rank} with ${card.charge} ${names.charges}.`
-      let publicMessage = `${player.name} played ${card.rank}`
+      const privateMessage = `You ${names.played} ${card.rank} with ${card.charge} ${names.charges}.`
+      let publicMessage = `${player.name} ${names.played} ${card.rank}`
       publicMessage += ` with ${card.charge} ${names.charges}.`
       const chargeEpisode = scandalEpisode.addYouChild(
         player,
@@ -117,5 +119,7 @@ export class PlanEventHandler {
     })
     scandalEpisode.addPublicChild(oldCenterMessage)
     scandalEpisode.addPublicChild(newCenterMessage)
+    scandalEpisode.addPublicChild(oldMarketMessage)
+    scandalEpisode.addPublicChild(newMarketMessage)
   }
 }

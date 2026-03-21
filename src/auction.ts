@@ -43,7 +43,7 @@ export class Auction {
       const otherPlayers = playerArray.filter(player => !arrestPlayers.includes(player))
       const arrestEpisode = state.history.addChild()
       otherPlayers.forEach(player => {
-        let message = `${playersToString(arrestPlayers)} played the highest rank, ${maxRank}, `
+        let message = `${playersToString(arrestPlayers)} ${names.played} the highest rank, ${maxRank}, `
         message += `so their cards are ${names.archivedTo} the ${names.archive}.`
         arrestEpisode.messages[player.id] = message
       })
@@ -51,7 +51,7 @@ export class Auction {
         const otherArrestPlayers = arrestPlayers.filter(other => other.id !== player.id)
         const otherNames = otherArrestPlayers.map(other => other.name)
         const arrestNames = ['You', ...otherNames]
-        let message = `${arrayToString(arrestNames)} played the highest rank, ${maxRank}, `
+        let message = `${arrayToString(arrestNames)} ${names.played} the highest rank, ${maxRank}, `
         message += `so they are ${names.archivedTo} the ${names.archive}.`
         arrestEpisode.messages[player.id] = message
       })
