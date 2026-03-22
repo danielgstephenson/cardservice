@@ -3,40 +3,34 @@ import sharedInput from './sharedInput'
 
 const run1 = runService({
   events: [],
-  input: sharedInput,
+  run: { input: sharedInput },
   label: '1'
 })
 
 const run2 = runService({
-  events: [
-    {
-      type: 'plan',
-      playCard: run1.players.p1.hand[1],
-      trashCard: run1.players.p1.hand[0],
-      playerId: 'p1'
-    }, {
-      type: 'plan',
-      playCard: run1.players.p2.hand[1],
-      trashCard: run1.players.p2.hand[0],
-      playerId: 'p2'
-    }, {
-      type: 'plan',
-      playCard: run1.players.p3.hand[3],
-      trashCard: run1.players.p3.hand[0],
-      playerId: 'p3'
-    }, {
-      type: 'plan',
-      playCard: run1.players.p4.hand[1],
-      trashCard: run1.players.p4.hand[0],
-      playerId: 'p4'
-    }, {
-      type: 'plan',
-      playCard: run1.players.p5.hand[1],
-      trashCard: run1.players.p5.hand[0],
-      playerId: 'p5'
+  plans: {
+    p1: {
+      play: 1,
+      trash: 0,
+    },
+    p2: {
+      play: 1,
+      trash: 0,
+    },
+    p3: {
+      play: 3,
+      trash: 0,
+    },
+    p4: {
+      play: 1,
+      trash:0,
+    },
+    p5: {
+      play: 1,
+      trash: 0,
     }
-  ],
-  input: run1.input,
+  },
+  run: run1,
   label: '2'
 })
 
@@ -60,7 +54,7 @@ const run3 = runService({
       playerId: 'p5'
     }
   ],
-  input: run2.input,
+  run: run2,
   label: '3'
 })
 
@@ -72,44 +66,34 @@ const run4 = runService({
       playerId: 'p1'
     }
   ],
-  input: run3.input,
+  run: run3,
   label: '4'
 })
 
 const run5 = runService({
-  events: [
-    {
-      type: 'plan',
-      playCard: run4.players.p1.hand[1],
-      playerId: 'p1',
-      trashCard: run4.players.p1.hand[0]
+  plans: {
+    p1: {
+      play: 1,
+      trash: 0
     },
-    {
-      type: 'plan',
-      playCard: run4.players.p2.hand[1],
-      playerId: 'p2',
-      trashCard: run4.players.p2.hand[0]
+    p2: {
+      play: 1,
+      trash: 0
     },
-    {
-      type: 'plan',
-      playCard: run4.players.p3.hand[0],
-      playerId: 'p3',
-      trashCard: run4.players.p3.hand[1]
+    p3: {
+      play: 0,
+      trash: 1
     },
-    {
-      type: 'plan',
-      playCard: run4.players.p4.hand[1],
-      playerId: 'p4',
-      trashCard: run4.players.p4.hand[0]
+    p4: {
+      play: 1,
+      trash: 0
     },
-    {
-      type: 'plan',
-      playCard: run4.players.p5.hand[1],
-      playerId: 'p5',
-      trashCard: run4.players.p5.hand[0]
+    p5: {
+      play: 1,
+      trash: 0
     }
-  ],
-  input: run4.input,
+  },
+  run: run4,
   label: '5'
 })
 
@@ -147,7 +131,7 @@ const run6 = runService({
       playerId: 'p5'
     }
   ],
-  input: run5.input,
+  run: run5,
   label: '6'
 })
 
@@ -159,44 +143,34 @@ const run7 = runService({
       playerId: 'p1'
     }
   ],
-  input: run6.input,
+  run: run6,
   label: '7'
 })
 
 runService({
-  events: [
-    {
-      type: 'plan',
-      playCard: run7.players.p1.hand[0],
-      playerId: 'p1',
-      trashCard: run7.players.p1.hand[1]
+  plans: {
+    p1: {
+      play: 0,
+      trash: 1
     },
-    {
-      type: 'plan',
-      playCard: run7.players.p2.hand[0],
-      playerId: 'p2',
-      trashCard: run7.players.p2.hand[1]
+    p2: {
+      play: 0,
+      trash: 1
     },
-    {
-      type: 'plan',
-      playCard: run7.players.p3.hand[0],
-      playerId: 'p3',
-      trashCard: run7.players.p3.hand[1]
+    p3: {
+      play: 0,
+      trash: 1
     },
-    {
-      type: 'plan',
-      playCard: run7.players.p4.hand[0],
-      playerId: 'p4',
-      trashCard: run4.players.p4.hand[1]
+    p4:{
+      play: 0,
+      trash: 1
     },
-    {
-      type: 'plan',
-      playCard: run7.players.p5.hand[0],
-      playerId: 'p5',
-      trashCard: run7.players.p5.hand[1]
+    p5: {
+      play: 0,
+      trash: 1
     }
-  ],
-  input: run7.input,
+  },
+  run: run7,
   label: '8',
   print: true,
   playerId: 'p3',
