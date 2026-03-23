@@ -11,23 +11,23 @@ const run2 = runService({
   plans: {
     p1: {
       play: 1,
-      trash: 0,
+      trash: 0
     },
     p2: {
       play: 1,
-      trash: 0,
+      trash: 0
     },
     p3: {
       play: 3,
-      trash: 0,
+      trash: 0
     },
     p4: {
       play: 1,
-      trash:0,
+      trash: 0
     },
     p5: {
       play: 1,
-      trash: 0,
+      trash: 0
     }
   },
   run: run1,
@@ -161,7 +161,7 @@ runService({
       play: 0,
       trash: 1
     },
-    p4:{
+    p4: {
       play: 0,
       trash: 1
     },
