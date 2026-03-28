@@ -111,10 +111,17 @@ function getOutputEpisode (episode: Episode, player?: Player): External.Episode 
   const groupIds = unique(children.map(child => child.groupId).filter(id => id != null))
   groupIds.forEach(groupId => {
     if (player == null) return
+    const topPlayerIds = episode.state.topPlayerIds.get(groupId) ?? []
     const indices = childIndices.filter(i => children[i].groupId === groupId)
     const sortedIndices = indices.toSorted((a, b) => {
-      const idA = children[a].playerId
-      const idB = children[b].playerId
+      const idA = children[a].playerId ?? ''
+      const idB = children[b].playerId ?? ''
+      if (topPlayerIds.includes(idA) && !topPlayerIds.includes(idB)) {
+        return -1
+      }
+      if (!topPlayerIds.includes(idA) && topPlayerIds.includes(idB)) {
+        return 1
+      }
       if (idA === player.id && idB !== player.id) {
         return -1
       }

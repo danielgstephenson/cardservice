@@ -434,6 +434,34 @@
         "id": "0.9052961096167564",
         "rank": 1
       }
+    },
+    {
+      "type": "bid",
+      "bid": 5,
+      "playerId": "p1"
+    },
+    {
+      "type": "concede",
+      "playerId": "p2"
+    },
+    {
+      "type": "concede",
+      "playerId": "p3"
+    },
+    {
+      "type": "concede",
+      "playerId": "p4"
+    },
+    {
+      "type": "concede",
+      "playerId": "p5"
+    },
+    {
+      "type": "take",
+      "cardIds": [
+        "0.3756883102469146"
+      ],
+      "playerId": "p1"
     }
   ],
   "names": {

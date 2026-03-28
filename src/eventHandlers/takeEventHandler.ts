@@ -62,6 +62,7 @@ export class TakeEventHandler {
       dungeonEpisode.addPublicChild(becomesMessage)
     }
     const groupId = String(Math.random())
+    state.topPlayerIds.set(groupId, [event.playerId])
     playerArray.forEach(player => this.discard(player, groupId, event))
     this.state.advanceRound()
   }
@@ -94,9 +95,9 @@ export class TakeEventHandler {
     discardEpisode.addYouChild(player, privateOldMessage, publicOldMessage, player.id)
     if (winner) {
       const boughtRanks = cardsToString(auctionCards)
-      const onlyOne = boughtRanks.length === 1
+      const onlyOne = auctionCards.length === 1
       const orderString = onlyOne ? '' : ' from lowest to highest'
-      const are = onlyOne ? 'is' : 'are'
+      const are = isAre(auctionCards)
       let privateMessage = `The ${boughtRanks} you bought ${are} added to`
       privateMessage += ` your ${names.deck}${orderString}.`
       let publicMessage = `The ${boughtRanks} ${player.name} bought ${are} added to`

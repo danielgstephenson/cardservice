@@ -3,7 +3,7 @@ import { Run, RunProps } from './clientTypes'
 import printEpisodes from './printEpisodes'
 import writeJson from './writeJson'
 
-export default function runService(props: RunProps): Run {
+export default function runService (props: RunProps): Run {
   const input = structuredClone(props.run.input)
   if ('events' in props) {
     input.events.push(...props.events)
@@ -53,7 +53,7 @@ export default function runService(props: RunProps): Run {
     })
   }
   return {
-    input: input,
-    output,
+    input,
+    output
   }
 }

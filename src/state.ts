@@ -22,6 +22,7 @@ export class State {
   inputEventHandler = new InputEventHandler(this)
   players: Record<string, Player> = {}
   cards: Record<string, Card> = {}
+  topPlayerIds = new Map<string, string[]>()
   history: History
   round = 1
   lastMessageRound = 0

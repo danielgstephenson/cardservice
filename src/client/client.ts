@@ -147,7 +147,7 @@ const run7 = runService({
   label: '7'
 })
 
-runService({
+const run8 = runService({
   plans: {
     p1: {
       play: 0,
@@ -171,7 +171,40 @@ runService({
     }
   },
   run: run7,
-  label: '8',
+  label: '8'
+})
+
+runService({
+  events: [
+    {
+      type: 'bid',
+      bid: 5,
+      playerId: 'p1'
+    },
+    {
+      type: 'concede',
+      playerId: 'p2'
+    },
+    {
+      type: 'concede',
+      playerId: 'p3'
+    },
+    {
+      type: 'concede',
+      playerId: 'p4'
+    },
+    {
+      type: 'concede',
+      playerId: 'p5'
+    },
+    {
+      type: 'take',
+      cardIds: [run8.output.game.market[0].id],
+      playerId: 'p1'
+    }
+  ],
+  run: run8,
+  label: '9',
   print: true,
   playerId: 'p3',
   write: true
