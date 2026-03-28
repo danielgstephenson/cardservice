@@ -1,6 +1,7 @@
 import * as External from '../external'
 import { cardsToString } from '../translate'
 import { State } from '../state'
+import { addPlayedEpisodes } from '../powers/addPlayedEpisodes'
 
 export class PlanEventHandler {
   state: State
@@ -46,20 +47,20 @@ export class PlanEventHandler {
     const playerArray = Object.values(state.players)
     player.drawUpToThree(planEpisode)
     if (playerArray.every(player => player.playReady)) {
-      this.onAllReady()
+      this.onAllReady(event)
     }
   }
 
-  onAllReady (): void {
+  onAllReady (event: External.PlanEvent): void {
     const state = this.state
     state.history.addPublicChild('Everyone is ready.')
     state.playCards()
-    this.scandal()
+    this.scandal(event)
     if (state.phase === 'end') return
     state.auction.start()
   }
 
-  scandal (): void {
+  scandal (event: External.PlanEvent): void {
     const state = this.state
     const players = Object.values(state.players)
     const playedCards = state.getPlayedCards()
@@ -95,6 +96,7 @@ export class PlanEventHandler {
         eyesMessage += `so ${names.empress} ${names.isAddedToMarket}.`
         state.endGame()
       } else {
+        state.market.add(centerCard0)
         eyesMessage += `not more than the ${players.length} players, so ${names.timeDoesNotPass} `
         eyesMessage += `and only ${centerCard0.rank} ${names.isAddedToMarket}.`
       }
@@ -102,21 +104,8 @@ export class PlanEventHandler {
     const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array)}.`
     const newMarketMessage = `The ${names.market} becomes ${cardsToString(state.market.array)}.`
     const scandalEpisode = state.history.addPublicChild(eyesMessage)
-    const groupId = crypto.randomUUID()
-    players.forEach(player => {
-      const card = player.playArea.array[0]
-      if (card == null) throw new Error('scandal: playCard == null')
-      const privateMessage = `You ${names.played} ${card.rank} with ${card.charge} ${names.charges}.`
-      let publicMessage = `${player.name} ${names.played} ${card.rank}`
-      publicMessage += ` with ${card.charge} ${names.charges}.`
-      const chargeEpisode = scandalEpisode.addYouChild(
-        player,
-        privateMessage,
-        publicMessage,
-        player.id
-      )
-      chargeEpisode.groupId = groupId
-    })
+    const player = state.players[event.playerId]
+    addPlayedEpisodes(scandalEpisode, player, { charge: true })
     scandalEpisode.addPublicChild(oldCenterMessage)
     scandalEpisode.addPublicChild(newCenterMessage)
     scandalEpisode.addPublicChild(oldMarketMessage)

@@ -31,6 +31,9 @@ export interface Input {
     market: string
     minor: string
     played: string
+    rank: string
+    rankedLower: string
+    rankedHigher: string
     timeDoesNotPass: string
     timeDoesPass: string
     trash: string

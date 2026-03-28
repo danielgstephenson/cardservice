@@ -1,3 +1,4 @@
+import { toWords } from 'number-to-words'
 import * as External from '../external'
 import { State } from '../state'
 
@@ -56,14 +57,15 @@ export class ConcedeEventHandler {
     const readyToEndAuction = losers.every(p => p.auctionReady)
     if (!readyToEndAuction) return
     const maximalBid = Math.max(...bids)
+    const highestUntiedBidWords = toWords(highestUntiedBid)
     let privateMessage = 'Everyone is ready, '
     let publicMessage = 'Everyone is ready, '
     if (highestUntiedBid === maximalBid) {
-      privateMessage += `so you pay ${highestUntiedBid}.`
-      publicMessage += `so ${winner.name} pays ${highestUntiedBid}.`
+      privateMessage += `so you pay ${highestUntiedBidWords}.`
+      publicMessage += `so ${winner.name} pays ${highestUntiedBidWords}.`
     } else {
-      privateMessage += `so you pay ${highestUntiedBid} because you have the highest untied bid.`
-      publicMessage += `so ${winner.name} pays ${highestUntiedBid} because they have the highest untied bid.`
+      privateMessage += `so you pay ${highestUntiedBidWords} because you have the highest untied bid.`
+      publicMessage += `so ${winner.name} pays ${highestUntiedBidWords} because they have the highest untied bid.`
     }
     const allReadyEpisode = state.history.addYouChild(winner, privateMessage, publicMessage)
     winner.pay(highestUntiedBid, allReadyEpisode)

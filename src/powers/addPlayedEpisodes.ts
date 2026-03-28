@@ -14,7 +14,22 @@ export function addPlayedEpisodes (parentEpisode: Episode, youPlayer: Player, op
   const players = Object.values(parentEpisode.state.players)
   const showCharge = options.charge ?? false
   const showColor = options.color ?? false
-  // RANK ( To be implemented)
+  // RANK
+  if (!showColor && !showCharge) {
+    players.forEach(player => {
+      const card = player.playArea.array[0]
+      if (card == null) throw new Error('addPlayedEpisodes: playCard == null')
+      const privateMessage = `You ${names.played} ${card.rank}.`
+      const publicMessage = `${player.name} ${names.played} ${card.rank}.`
+      const rankEpisode = parentEpisode.addYouChild(
+        player,
+        privateMessage,
+        publicMessage,
+        player.id
+      )
+      rankEpisode.groupId = groupId
+    })
+  }
   // RANK AND CHARGE
   if (!showColor && showCharge) {
     players.forEach(player => {

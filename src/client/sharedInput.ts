@@ -200,7 +200,10 @@ const sharedInput: Input = {
     market: 'trial',
     minor: 'silver',
     played: 'played',
-    timeDoesNotPass: 'there is only a minor scandal',
+    rank: 'rank',
+    rankedLower: 'ranked lower',
+    rankedHigher: 'ranked higher',
+    timeDoesNotPass: 'there is a minor scandal',
     timeDoesPass: 'there is a major scandal',
     trash: 'exile',
     trashed: 'exiled'

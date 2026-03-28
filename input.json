@@ -192,6 +192,7 @@
   "events": [
     {
       "type": "plan",
+      "playerId": "p1",
       "playCard": {
         "id": "0.09729881142266095",
         "rank": 4
@@ -199,11 +200,11 @@
       "trashCard": {
         "id": "0.40727774938568473",
         "rank": 3
-      },
-      "playerId": "p1"
+      }
     },
     {
       "type": "plan",
+      "playerId": "p2",
       "playCard": {
         "id": "0.09428222896531224",
         "rank": 4
@@ -211,11 +212,11 @@
       "trashCard": {
         "id": "0.5982141378335655",
         "rank": 3
-      },
-      "playerId": "p2"
+      }
     },
     {
       "type": "plan",
+      "playerId": "p3",
       "playCard": {
         "id": "0.979285889538005",
         "rank": 7
@@ -223,11 +224,11 @@
       "trashCard": {
         "id": "0.04203520738519728",
         "rank": 3
-      },
-      "playerId": "p3"
+      }
     },
     {
       "type": "plan",
+      "playerId": "p4",
       "playCard": {
         "id": "0.30746148619800806",
         "rank": 4
@@ -235,11 +236,11 @@
       "trashCard": {
         "id": "0.4200851337518543",
         "rank": 3
-      },
-      "playerId": "p4"
+      }
     },
     {
       "type": "plan",
+      "playerId": "p5",
       "playCard": {
         "id": "0.3228305440861732",
         "rank": 4
@@ -247,8 +248,7 @@
       "trashCard": {
         "id": "0.9192790368106216",
         "rank": 3
-      },
-      "playerId": "p5"
+      }
     },
     {
       "type": "bid",
@@ -281,11 +281,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p1",
       "playCard": {
         "id": "0.9180639856494963",
         "rank": 7
       },
-      "playerId": "p1",
       "trashCard": {
         "id": "0.8359451135620475",
         "rank": 5
@@ -293,11 +293,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p2",
       "playCard": {
         "id": "0.8218492877203971",
         "rank": 7
       },
-      "playerId": "p2",
       "trashCard": {
         "id": "0.5262142263818532",
         "rank": 5
@@ -305,11 +305,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p3",
       "playCard": {
         "id": "0.5975988868158311",
         "rank": 4
       },
-      "playerId": "p3",
       "trashCard": {
         "id": "0.45778213744051754",
         "rank": 5
@@ -317,11 +317,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p4",
       "playCard": {
         "id": "0.47317630890756845",
         "rank": 7
       },
-      "playerId": "p4",
       "trashCard": {
         "id": "0.9660886821802706",
         "rank": 5
@@ -329,11 +329,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p5",
       "playCard": {
         "id": "0.3977024888154119",
         "rank": 7
       },
-      "playerId": "p5",
       "trashCard": {
         "id": "0.28758308151736856",
         "rank": 5
@@ -377,11 +377,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p1",
       "playCard": {
         "id": "0.756102136336267",
         "rank": 9
       },
-      "playerId": "p1",
       "trashCard": {
         "id": "0.23432883364148438",
         "rank": 1
@@ -389,11 +389,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p2",
       "playCard": {
         "id": "0.005620446987450123",
         "rank": 9
       },
-      "playerId": "p2",
       "trashCard": {
         "id": "0.729976806556806",
         "rank": 1
@@ -401,11 +401,11 @@
     },
     {
       "type": "plan",
+      "playerId": "p3",
       "playCard": {
         "id": "0.7341387218330055",
         "rank": 9
       },
-      "playerId": "p3",
       "trashCard": {
         "id": "0.41199737414717674",
         "rank": 17
@@ -413,23 +413,23 @@
     },
     {
       "type": "plan",
+      "playerId": "p4",
       "playCard": {
         "id": "0.8818094418384135",
         "rank": 9
       },
-      "playerId": "p4",
       "trashCard": {
-        "id": "0.47317630890756845",
-        "rank": 7
+        "id": "0.9541948742698878",
+        "rank": 1
       }
     },
     {
       "type": "plan",
+      "playerId": "p5",
       "playCard": {
         "id": "0.4064606889151037",
         "rank": 9
       },
-      "playerId": "p5",
       "trashCard": {
         "id": "0.9052961096167564",
         "rank": 1
@@ -459,7 +459,10 @@
     "market": "trial",
     "minor": "silver",
     "played": "played",
-    "timeDoesNotPass": "there is only a minor scandal",
+    "rank": "rank",
+    "rankedLower": "ranked lower",
+    "rankedHigher": "ranked higher",
+    "timeDoesNotPass": "there is a minor scandal",
     "timeDoesPass": "there is a major scandal",
     "trash": "exile",
     "trashed": "exiled"
