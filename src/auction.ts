@@ -62,7 +62,7 @@ export class Auction {
     }
     // Announce Bonus Powers
     const auctionCards = cardsToString(state.market.array)
-    let startAuctionMessage = `${auctionCards} ${isAre(state.archive.array)} up for `
+    let startAuctionMessage = `${auctionCards} ${isAre(state.market.array)} up for `
     startAuctionMessage += `auction in the ${names.market}.`
     state.history.addPublicChild(startAuctionMessage)
     state.phase = 'auction'
