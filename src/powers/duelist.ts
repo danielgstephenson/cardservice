@@ -1,8 +1,7 @@
 import { Card } from '../card'
 import { Episode } from '../episode'
-import { whichMax } from '../math'
 import { Player } from '../player'
-import { cardsToString } from '../translate'
+import { addPlayedEpisodes } from './addPlayedEpisodes'
 import { Powers } from './powers'
 
 export class Duelist extends Powers {
@@ -27,39 +26,32 @@ export class Duelist extends Powers {
         ...
         (after exiled card is chosen events are added here)
     */
-    const names = card.state.input.names
-    let privateMessage = `First, if the ${names.highestRank} ${names.card} ${names.inPlay} is red or yellow, `
-    let publicMessage = privateMessage
-    privateMessage += `earn 10 ${names.major}.`
-    publicMessage += `${player.name} earns 10 ${names.major}.`
-    const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
-    const players = Object.values(player.state.players)
-    const playedCards = players.map(p => p.playArea.array[0])
-    const playedRanks = playedCards.map(card => card.rank)
-    const highestRankCard = playedCards[whichMax(playedRanks)]
-    const colorMessage = `The highest rank ${names.card}, ${highestRankCard.rank}, is ${highestRankCard.color.toLowerCase()}.`
-    episode1.addPublicChild(colorMessage)
-    if (['Red', 'Yellow'].includes(card.color)) {
-      player.earn(10, episode1)
-    }
+    // This still needs to be implemented.
   }
 
   power2 (card: Card, player: Player, parentEpisode: Episode): void {
     /*
     Second, you draw a number of cards equal to the most eyes on any played card.
+      The most eyes on any played card is ${maxEyes}.
+        - You played X with Y eyes.
+        - p1 played X with Y eyes.
+        ...
+      A: (Nothing happens if maxEyes is zero)
+      B: You draw ${maxEyes}.
+        (draw events)
     */
-
     const names = card.state.input.names
-    const privateMessage = `Second, you put one ${names.joan} on the left side of your ${names.deck}. `
-    const publicMessage = `Second, ${player.name} puts one ${names.joan} on the left side of their ${names.deck}.`
+    const privateMessage = `Second, you draw a number of ${names.cards} equal to the most eyes on any played ${names.card}.`
+    const publicMessage = `Second, ${player.name} draws a number of ${names.cards} equal to the most ${names.charges} on any played ${names.card}.`
     const episode2 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
-    const privateOldDeck = `Your ${names.deck} was ${cardsToString(player.deck.array)}.`
-    const publicOldDeck = `${player.name}'s ${names.deck} was ${cardsToString(player.deck.array)}.`
-    episode2.addYouChild(player, privateOldDeck, publicOldDeck)
-    const newCard = new Card(1, card.state)
-    player.deck.add(newCard, true)
-    const privateNewDeck = `Your ${names.deck} becomes ${cardsToString(player.deck.array)}.`
-    const publicNewDeck = `${player.name}'s ${names.deck} becomes ${cardsToString(player.deck.array)}.`
-    episode2.addYouChild(player, privateNewDeck, publicNewDeck)
+    const playedCards = card.state.getPlayedCards()
+    const maxEyes = Math.max(...playedCards.map(c => c.charge))
+    const eyesEpisode = episode2.addPublicChild(`The most ${names.charges} on any played ${names.card} is ${maxEyes}.`)
+    addPlayedEpisodes(eyesEpisode, player, { charge: true })
+    if (maxEyes === 0) return
+    const privateDrawMessage = `You draw ${maxEyes}.`
+    const publicDrawMessage = `${player.name} draws ${maxEyes}.`
+    const drawEpisode = episode2.addYouChild(player, privateDrawMessage, publicDrawMessage)
+    player.draw(maxEyes, drawEpisode)
   }
 }

@@ -26,7 +26,7 @@ export class Pirate extends Powers {
     const highestRankCard = playedCards[whichMax(playedRanks)]
     const colorMessage = `The highest rank ${names.card}, ${highestRankCard.rank}, is ${highestRankCard.color.toLowerCase()}.`
     const colorEpisode = episode1.addPublicChild(colorMessage)
-    addPlayedEpisodes(colorEpisode, player)
+    addPlayedEpisodes(colorEpisode, player, { color: true })
     if (['Red', 'Yellow'].includes(card.color)) {
       player.earn(10, episode1)
     }
