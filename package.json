@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc -build ./src",
-    "start": "node ./dist/client/client",
+    "start": "node --enable-source-maps ./dist/client/client",
     "dev": "npm run build && npm run start"
   },
   "author": "",

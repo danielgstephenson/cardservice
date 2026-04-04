@@ -462,6 +462,66 @@
         "0.3756883102469146"
       ],
       "playerId": "p1"
+    },
+    {
+      "type": "plan",
+      "playerId": "p1",
+      "playCard": {
+        "id": "0.09729881142266095",
+        "rank": 4
+      },
+      "trashCard": {
+        "id": "0.30761773977428675",
+        "rank": 13
+      }
+    },
+    {
+      "type": "plan",
+      "playerId": "p2",
+      "playCard": {
+        "id": "0.09428222896531224",
+        "rank": 4
+      },
+      "trashCard": {
+        "id": "0.6266478297766298",
+        "rank": 1
+      }
+    },
+    {
+      "type": "plan",
+      "playerId": "p3",
+      "playCard": {
+        "id": "0.7343352411407977",
+        "rank": 16
+      },
+      "trashCard": {
+        "id": "0.2264842400327325",
+        "rank": 1
+      }
+    },
+    {
+      "type": "plan",
+      "playerId": "p4",
+      "playCard": {
+        "id": "0.30746148619800806",
+        "rank": 4
+      },
+      "trashCard": {
+        "id": "0.07081893878057599",
+        "rank": 1
+      }
+    },
+    {
+      "type": "plan",
+      "playerId": "p5",
+      "playCard": {
+        "id": "0.3228305440861732",
+        "rank": 4
+      },
+      "trashCard": {
+        "id": "0.5074512653518468",
+        "rank": 1
+      }
     }
   ],
   "names": {

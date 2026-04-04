@@ -50,7 +50,7 @@ export class Player {
 
   play (card: Card, groupId: string): void {
     if (card.powers == null) {
-      throw new Error(`Player.play: card ${card.id} with rank ${card.rank} has no powers.`)
+      throw new Error(`Player.play: player ${this.id} played card ${card.id} with rank ${card.rank} has no powers.`)
     }
     const privateMessage = `You play ${card.rank}.`
     const publicMessage = `${this.name} plays ${card.rank}.`
@@ -117,7 +117,7 @@ export class Player {
 
   copy (card: Card): void {}
 
-  earn (amount: number, parentEpisode: Episode): void {
+  earn (amount: number, parentEpisode: Episode, skipHead = false): void {
     if (amount < 0) {
       throw new Error('player.earn: amount must non-negative')
     }
@@ -140,16 +140,16 @@ export class Player {
       privateMessage += `You earn ${minorAmount} ${names.minor}.`
       publicMessage += `${this.name} earns ${minorAmount} ${names.minor}.`
     }
-    const earnEpisode = parentEpisode.addYouChild(this, privateMessage, publicMessage)
+    const headEpisode = skipHead ? parentEpisode : parentEpisode.addYouChild(this, privateMessage, publicMessage)
     if (majorAmount > 0) {
       const privateMessage = `You went from ${oldMajorMoney} to ${this.majorMoney} ${names.major}.`
       const publicMessage = `${this.name} went from ${oldMajorMoney} to ${this.majorMoney} ${names.major}.`
-      earnEpisode.addYouChild(this, privateMessage, publicMessage)
+      headEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     if (minorAmount > 0) {
       const privateMessage = `You went from ${oldMinorMoney} to ${this.minorMoney} ${names.minor}.`
       const publicMessage = `${this.name} went from ${oldMinorMoney} to ${this.minorMoney} ${names.minor}.`
-      earnEpisode.addYouChild(this, privateMessage, publicMessage)
+      headEpisode.addYouChild(this, privateMessage, publicMessage)
     }
   }
 

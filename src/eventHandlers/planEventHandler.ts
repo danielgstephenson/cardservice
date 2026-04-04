@@ -13,7 +13,8 @@ export class PlanEventHandler {
   handle (event: External.PlanEvent): void {
     const state = this.state
     if (state.phase !== 'play') {
-      throw new Error('handlePlanEvent: this.phase !== "play"')
+      console.log(`state.phase = ${state.phase}`)
+      throw new Error('handlePlanEvent: state.phase !== "play"')
     }
     if (event.playCard.id === event.trashCard.id) {
       throw new Error('handlePlanEvent: event.playCard.id === event.trashCard.id')
@@ -55,6 +56,7 @@ export class PlanEventHandler {
     const state = this.state
     state.history.addPublicChild('Everyone is ready.')
     state.playCards()
+    if (state.choices.length > 0) return
     this.scandal(event)
     if (state.phase === 'end') return
     state.auction.start()

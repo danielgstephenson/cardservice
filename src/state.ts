@@ -11,6 +11,7 @@ import { InputEventHandler } from './eventHandlers/inputEventHandler'
 import { arrayToString, playersToString } from './translate'
 import { unique } from './math'
 import { Auction } from './auction'
+import { Choice } from './choice'
 
 export class State {
   startTime: number
@@ -31,6 +32,7 @@ export class State {
   playTied = false
   input: Input
   startingEpisode: Episode
+  choices: Choice[] = []
   startingHand: Card[] = []
   startingMarket: Card[] = []
   startingDeck: Card[] = []
@@ -53,7 +55,10 @@ export class State {
     this.center.label = 'center'
     this.market = new CardGroup(this.startingMarket)
     this.market.label = 'market'
-    this.input.events.forEach(event => this.inputEventHandler.handle(event))
+    this.input.events.forEach(event => {
+      console.log(`this.phase = ${this.phase}`)
+      this.inputEventHandler.handle(event)
+    })
   }
 
   advanceRound (): void {
@@ -66,6 +71,8 @@ export class State {
       player.bid = 0
     })
     const message = `Round ${this.round} begins.`
+    console.log(message)
+    console.log(`this.phase = ${this.phase}`)
     this.history.addPublicChild(message)
     if (this.center.array.length > 1) return
     // const names = this.input.names
@@ -152,5 +159,6 @@ export class State {
       const card = player.playArea.array[0]
       player.play(card, groupId)
     })
+    this.choices.forEach(choice => choice.intend())
   }
 }

@@ -174,7 +174,7 @@ const run8 = runService({
   label: '8'
 })
 
-runService({
+const run9 = runService({
   events: [
     {
       type: 'bid',
@@ -204,6 +204,33 @@ runService({
     }
   ],
   run: run8,
+  label: '9'
+})
+
+runService({
+  plans: {
+    p1: {
+      play: 1,
+      trash: 0
+    },
+    p2: {
+      play: 1,
+      trash: 3
+    },
+    p3: {
+      play: 0,
+      trash: 1
+    },
+    p4: {
+      play: 1,
+      trash: 3
+    },
+    p5: {
+      play: 1,
+      trash: 3
+    }
+  },
+  run: run9,
   label: '9',
   print: true,
   playerId: 'p3',

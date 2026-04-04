@@ -11,8 +11,6 @@ export class Duelist extends Powers {
     this.power2(card, player, parentEpisode)
   }
 
-  // These powers are not correct. They were just copied from the pirate. We still need to implement these powers.
-
   power1 (card: Card, player: Player, parentEpisode: Episode): void {
     /*
     First, if anyone ${names.played} a ${names.card} ranked lower than 9, you take one of your ${names.trashed} ${names.cards} into your hand.
@@ -31,11 +29,11 @@ export class Duelist extends Powers {
     privateMessage += `you take one of your ${names.trashed} ${names.cards} into your hand.`
     let publicMessage = `First, if anyone ${names.played} a ${names.card} ${names.rankedLower} than 9, `
     publicMessage += `${player.name} takes one of their ${names.trashed} ${names.cards} into their hand.`
-    const episode2 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
+    const episode1 = parentEpisode.addYouChild(player, privateMessage, publicMessage)
     const playedCards = card.state.getPlayedCards()
     const lowerCards = playedCards.filter(c => c.rank < 9)
     if (lowerCards.length === 0) {
-      const noneEpisode = episode2.addPublicChild(`There are no ${names.played} ${names.cards} ${names.rankedLower} than 9.`)
+      const noneEpisode = episode1.addPublicChild(`There are no ${names.played} ${names.cards} ${names.rankedLower} than 9.`)
       addPlayedEpisodes(noneEpisode, player)
     }
     // Case B still needs to be implemented.
