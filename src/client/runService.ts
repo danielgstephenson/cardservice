@@ -4,8 +4,18 @@ import printEpisodes from './printEpisodes'
 import writeJson from './writeJson'
 
 export default function runService (props: RunProps): Run {
+  const eventful = 'events' in props
+  if (props.debug === true) {
+    const label = eventful
+      ? props.events.length === 1
+        ? 'take'
+        : 'auction'
+      : 'plan'
+    const round = props.run.output?.game.round ?? 0
+    console.debug(`Running ${props.label} (${label} ${round})...`)
+  }
   const input = structuredClone(props.run.input)
-  if ('events' in props) {
+  if (eventful) {
     input.events.push(...props.events)
   } else {
     for (const player of input.players) {
@@ -19,8 +29,15 @@ export default function runService (props: RunProps): Run {
       if (player == null) {
         throw new Error(`${playerId} is not playing`)
       }
+      if (props.debug === true) {
+        console.debug(`${player.name}'s hand is ${player.hand.map(c => c.rank).join(', ')}`)
+      }
       const playCard = player.hand[plan.play]
       const trashCard = player.hand[plan.trash]
+      if (props.debug === true) {
+        console.debug(`${player.name} plans to play ${playCard.rank} (${playCard.id})`)
+        console.debug(`${player.name} plans to trash ${trashCard.rank} (${trashCard.id})`)
+      }
       input.events.push({
         type: 'plan',
         playerId,
@@ -29,12 +46,11 @@ export default function runService (props: RunProps): Run {
       })
     }
   }
-  console.log(`Running ${props.label}...`)
   const start = props.start ?? 0
   const write = props.write ?? false
   const output = service(input)
   if (props.print === true) {
-    console.log(`Printing ${props.label}...`)
+    console.debug(`Printing ${props.label}...`)
     printEpisodes({
       start,
       output,
@@ -42,7 +58,7 @@ export default function runService (props: RunProps): Run {
     })
   }
   if (write) {
-    console.log(`Writing ${props.label}...`)
+    console.debug(`Writing ${props.label}...`)
     writeJson({
       data: input,
       filename: 'input.json'

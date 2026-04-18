@@ -31,7 +31,6 @@ export function setup (state: State): void {
     player.hand = new Hand(player, state.startingHand)
     player.deck = new Deck(player, state.startingDeck)
   })
-  state.history.addPublicChild('Round 1 begins.')
 }
 
 function getCardsInGame (state: State): Card[] {

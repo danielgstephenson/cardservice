@@ -99,16 +99,16 @@ export class TakeEventHandler {
       const orderString = onlyOne ? '' : ' from lowest to highest'
       const are = isAre(auctionCards)
       let privateMessage = `The ${boughtRanks} you bought ${are} added to`
-      privateMessage += ` your ${names.deck}${orderString}.`
+      privateMessage += ` the right side of your ${names.deck}${orderString}.`
       let publicMessage = `The ${boughtRanks} ${player.name} bought ${are} added to`
-      publicMessage += ` their ${names.deck}${orderString}.`
+      publicMessage += ` the right side of their ${names.deck}${orderString}.`
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
     const arrested = playCards.length === 0
     if (!arrested) {
       const rank = playCards[0].rank
-      const privateMessage = `The ${rank} you ${names.played} is added to your deck.`
-      const publicMessage = `The ${rank} ${player.name} ${names.played} is added to their deck.`
+      const privateMessage = `The ${rank} you ${names.played} is added to the right side of your deck.`
+      const publicMessage = `The ${rank} ${player.name} ${names.played} is added to the right side of their deck.`
       discardEpisode.addYouChild(player, privateMessage, publicMessage, player.id)
     }
   }

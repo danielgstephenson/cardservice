@@ -8,7 +8,6 @@ import { range } from './math'
 import { Hand } from './cardGroup/hand'
 import { PlayerCardGroup } from './cardGroup/playerCardGroup'
 import { Deck } from './cardGroup/deck'
-import { toWords } from 'number-to-words'
 
 export class Player {
   id: string
@@ -67,14 +66,14 @@ export class Player {
     const oldDeckString = cardsToString(this.deck.array)
     const oldHandString = cardsToString(this.hand.array)
     // const deckEmpty = this.deck.array.length === 0
+    const oldDeckLength = this.deck.array.length
     range(deckDrawCount).forEach(_ => {
       const card = this.deck.array[0]
       this.hand.add(card)
       deckDrawCards.push(card)
     })
     const newDeckString = cardsToString(this.deck.array)
-    const newHandString = cardsToString(this.hand.array)
-    if (drawCount > this.deck.array.length && drawPawns === true) {
+    if (drawCount > oldDeckLength && drawPawns === true) {
       const pawnCount = drawCount - this.deck.array.length
       const pawns = range(pawnCount).map(_ => new Card(1, this.state))
       pawns.forEach(pawn => this.hand.add(pawn))
@@ -82,7 +81,9 @@ export class Player {
     const privateDeckWas = `Your ${names.deck} was ${oldDeckString}.`
     const publicDeckWas = `${this.name}'s ${names.deck} was ${oldDeckString}.`
     parentEpisode.addYouChild(this, privateDeckWas, publicDeckWas)
-    parentEpisode.addPrivateChild(this, `Your hand was ${oldHandString}.`)
+    if (drawPawns !== true) {
+      parentEpisode.addPrivateChild(this, `Your hand was ${oldHandString}.`)
+    }
     // Add cases for drawing pawns where drawPawns == true
     if (drawCount > deckDrawCount) {
       const deckSize = this.deck.array.length
@@ -93,29 +94,29 @@ export class Player {
       let publicMessage = `${this.name}'s ${names.deck} only has ${deckSize}, ${deckString}, `
       publicMessage += `so they draw ${them}.`
       parentEpisode.addYouChild(this, privateMessage, publicMessage)
-    } else if (this.deck.array.length >= drawCount) {
-      const deckDrawString = cardsToString(deckDrawCards)
-      const privateMessage = `You draw ${drawCount} from your ${names.deck}, ${deckDrawString}.`
-      const publicMessage = `${this.name} draws ${drawCount} from their ${names.deck}, ${deckDrawString}.`
-      parentEpisode.addYouChild(this, privateMessage, publicMessage)
     }
     const privateDeckBecomes = `Your ${names.deck} becomes ${newDeckString}.`
     const publicDeckBecomes = `${this.name}'s ${names.deck} becomes ${newDeckString}.`
-    parentEpisode.addYouChild(this, privateDeckBecomes, publicDeckBecomes)
-    parentEpisode.addPrivateChild(this, `Your hand becomes ${newHandString}.`)
+    const newHandString = cardsToString(this.hand.array)
+    if (drawPawns === true) {
+      parentEpisode.addPrivateChild(this, `Your hand becomes ${newHandString}.`)
+      parentEpisode.addYouChild(this, privateDeckBecomes, publicDeckBecomes)
+    } else {
+      parentEpisode.addYouChild(this, privateDeckBecomes, publicDeckBecomes)
+      parentEpisode.addPrivateChild(this, `Your hand becomes ${newHandString}.`)
+    }
   }
 
   drawUpToThree (planEpisode: Episode): void {
+    planEpisode.addPublicChild(`HAND: ${cardsToString(this.hand.array)}`)
     const drawCount = Math.max(0, 3 - this.hand.array.length)
     if (drawCount === 0) return
-    const count = toWords(drawCount)
-    const privateMessage = `You draw ${count} to get back up to three.`
-    const publicMessage = `${this.name} draws ${count} to get back up to three.`
-    const drawEpisode = planEpisode.addYouChild(this, privateMessage, publicMessage)
-    this.draw(drawCount, drawEpisode, true)
+    planEpisode.addPublicChild(`drawCount: ${drawCount}`)
+    this.draw(drawCount, planEpisode, true)
+    planEpisode.addPublicChild(`HAND: ${cardsToString(this.hand.array)}`)
   }
 
-  copy (card: Card): void {}
+  copy (card: Card): void { }
 
   earn (amount: number, parentEpisode: Episode, skipHead = false): void {
     if (amount < 0) {

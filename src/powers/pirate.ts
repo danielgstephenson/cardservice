@@ -15,7 +15,7 @@ export class Pirate extends Powers {
 
   power1 (card: Card, player: Player, parentEpisode: Episode): void {
     const names = card.state.input.names
-    let privateMessage = `First, if the ${names.highestRank} ${names.card} ${names.inPlay} is red or yellow, `
+    let privateMessage = `First, if the ${names.highestRank} ${names.played} ${names.card} is red or yellow, `
     let publicMessage = privateMessage
     privateMessage += `earn 10 ${names.major}.`
     publicMessage += `${player.name} earns 10 ${names.major}.`

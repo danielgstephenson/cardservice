@@ -1,6 +1,7 @@
 import { Card } from '../card'
 import { Episode } from '../episode'
 import { Player } from '../player'
+import { cardsToString } from '../translate'
 import { addPlayedEpisodes } from './addPlayedEpisodes'
 import { Powers } from './powers'
 

@@ -1,4 +1,4 @@
-import { Card, Input, InputEvent, Output, Player } from '../external'
+import { Input, InputEvent, Output } from '../external'
 
 export interface Run {
   input: Input
@@ -6,18 +6,19 @@ export interface Run {
 }
 
 export interface BaseProps {
-  run: Omit<Run, 'output'>
+  debug?: boolean
+  run: Omit<Run, 'output'> & { output?: Output }
   label: string
   start?: number
   write?: boolean
 }
 
 export interface DontPrintProps {
-  print?: undefined | false,
+  print?: undefined | false
   playerId?: undefined
 }
 export interface DoPrintProps {
-  print: true,
+  print: true
   playerId: string
 }
 export type PrintProps = DontPrintProps | DoPrintProps

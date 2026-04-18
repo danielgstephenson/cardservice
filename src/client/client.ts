@@ -2,12 +2,14 @@ import runService from './runService'
 import sharedInput from './sharedInput'
 
 const run1 = runService({
+  debug: true,
   events: [],
   run: { input: sharedInput },
   label: '1'
 })
 
 const run2 = runService({
+  debug: true,
   plans: {
     p1: {
       play: 1,
@@ -35,6 +37,7 @@ const run2 = runService({
 })
 
 const run3 = runService({
+  debug: true,
   events: [
     {
       type: 'bid',
@@ -59,6 +62,7 @@ const run3 = runService({
 })
 
 const run4 = runService({
+  debug: true,
   events: [
     {
       type: 'take',
@@ -71,6 +75,7 @@ const run4 = runService({
 })
 
 const run5 = runService({
+  debug: true,
   plans: {
     p1: {
       play: 1,
@@ -98,6 +103,7 @@ const run5 = runService({
 })
 
 const run6 = runService({
+  debug: true,
   events: [
     {
       type: 'bid',
@@ -136,6 +142,7 @@ const run6 = runService({
 })
 
 const run7 = runService({
+  debug: true,
   events: [
     {
       type: 'take',
@@ -148,6 +155,7 @@ const run7 = runService({
 })
 
 const run8 = runService({
+  debug: true,
   plans: {
     p1: {
       play: 0,
@@ -175,6 +183,7 @@ const run8 = runService({
 })
 
 const run9 = runService({
+  debug: true,
   events: [
     {
       type: 'bid',
@@ -208,6 +217,7 @@ const run9 = runService({
 })
 
 runService({
+  debug: true,
   plans: {
     p1: {
       play: 1,
@@ -231,8 +241,8 @@ runService({
     }
   },
   run: run9,
-  label: '9',
+  label: '10',
   print: true,
-  playerId: 'p3',
+  playerId: 'p4',
   write: true
 })

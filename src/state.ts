@@ -56,7 +56,6 @@ export class State {
     this.market = new CardGroup(this.startingMarket)
     this.market.label = 'market'
     this.input.events.forEach(event => {
-      console.log(`this.phase = ${this.phase}`)
       this.inputEventHandler.handle(event)
     })
   }
@@ -71,8 +70,6 @@ export class State {
       player.bid = 0
     })
     const message = `Round ${this.round} begins.`
-    console.log(message)
-    console.log(`this.phase = ${this.phase}`)
     this.history.addPublicChild(message)
     if (this.center.array.length > 1) return
     // const names = this.input.names

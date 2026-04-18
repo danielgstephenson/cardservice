@@ -25,14 +25,10 @@ export class PlanEventHandler {
     }
     const handSize = player.hand.array.length - 2
     let publicMessage = `${player.name} is ready `
-    let privateMessage = 'You are ready '
+    let privateMessage = 'You are ready.'
     if (handSize < 3) {
-      publicMessage += 'and draws up to 3.'
-      privateMessage += 'and you draw up to 3.'
-    }
-    if (handSize >= 3) {
-      publicMessage += `and already has ${handSize} cards in hand.`
-      privateMessage += `and you already have ${handSize} cards in hand.`
+      publicMessage = `${player.name} is ready and draws up to 3.`
+      privateMessage = 'You are ready and you draw up to 3.'
     }
     const planEpisode = state.history.addYouChild(player, privateMessage, publicMessage)
     const oldHandMessage = `Your hand was ${cardsToString(player.hand.array)}.`
@@ -42,8 +38,6 @@ export class PlanEventHandler {
     player.trash(trashCard, planEpisode)
     const playCard = state.getCard(event.playCard.id)
     player.playArea.add(playCard)
-    const newHandMessage = `Your hand becomes ${cardsToString(player.hand.array)}.`
-    planEpisode.addPrivateChild(player, newHandMessage)
     player.playReady = true
     const playerArray = Object.values(state.players)
     player.drawUpToThree(planEpisode)
@@ -69,7 +63,7 @@ export class PlanEventHandler {
     const totalCharge = playedCards.reduce((total, card) => total + card.charge, 0)
     const names = state.input.names
     let eyesMessage = `There are ${totalCharge} total ${names.charges}, `
-    const oldCenterMessage = `The ${names.center} was ${cardsToString(state.center.array)}.`
+    const oldCenterMessage = `The ${names.center} was ${cardsToString(state.center.array, [names.empress])}.`
     const oldMarketMessage = `The ${names.market} was ${cardsToString(state.market.array)}.`
     if (totalCharge > players.length) {
       const centerCard0 = state.center.array[0]
@@ -103,7 +97,7 @@ export class PlanEventHandler {
         eyesMessage += `and only ${centerCard0.rank} ${names.isAddedToMarket}.`
       }
     }
-    const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array)}.`
+    const newCenterMessage = `The ${names.center} becomes ${cardsToString(state.center.array, [names.empress])}.`
     const newMarketMessage = `The ${names.market} becomes ${cardsToString(state.market.array)}.`
     const scandalEpisode = state.history.addPublicChild(eyesMessage)
     const player = state.players[event.playerId]
